@@ -1,3 +1,5 @@
 node_modules
 client_secret.json
 credentials
+.DS_*
+._*
