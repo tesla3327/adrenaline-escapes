@@ -3,9 +3,6 @@
 var fs = require('fs');
 var path = require('path');
 
-// Automatically polyfill for Promises;
-require('es6-promise').polyfill();
-
 var authorize = require('./authorize');
 var google = require('googleapis');
 

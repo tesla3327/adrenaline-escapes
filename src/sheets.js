@@ -1,9 +1,6 @@
 var fs = require('fs');
 const path = require('path');
 
-// Automatically polyfill for Promises;
-require('es6-promise').polyfill();
-
 const authorize = require('./authorize');
 var google = require('googleapis');
 
