@@ -6,6 +6,8 @@ var google = require('googleapis');
 
 let sheets;
 
+const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
+
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -16,21 +18,15 @@ var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 // Load client secrets from a local file.
 const authorizeWithGoogle = (clientSecretPath) => {
   return new Promise( (resolve, reject) => {
-    fs.readFile(clientSecretPath, function processClientSecrets(err, content) {
-      if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
-      }
-      // Authorize a client with the loaded credentials, then call the
-      // Google Sheets API.
-      authorize(
-        JSON.parse(content),
-        SCOPES,
-        TOKEN_PATH,
-        TOKEN_DIR,
-        resolve
-      );
-    });
+    // Authorize a client with the loaded credentials, then call the
+    // Google Sheets API.
+    authorize(
+      CLIENT_SECRET,
+      SCOPES,
+      TOKEN_PATH,
+      TOKEN_DIR,
+      resolve
+    );
   });
 };
 

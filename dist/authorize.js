@@ -4,6 +4,8 @@ var fs = require('fs');
 var readline = require('readline');
 var googleAuth = require('google-auth-library');
 
+var TOKEN = { "access_token": "ya29.GlvvA1woYTT5BNLkVSCWhrDWJGCiRZexXHvfZeqSKt6-FZzg7_AgnL6awqhf6l2NdFKPh-CZ61B1GFd5AfRzxB3Sj3XlL7c-eSqJquiv4yR0zcj8d1lFWTtnZpwh", "refresh_token": "1/x0YNTxa92A0CGY4YrY1DcDzfeawGuktF2RgQHkR3Ja8", "token_type": "Bearer", "expiry_date": 1486843368311 };
+
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -23,15 +25,8 @@ function authorize(credentials, scopes, _tokenPath, _tokenDir, callback) {
   var auth = new googleAuth();
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
-  // Check if we have previously stored a token.
-  fs.readFile(tokenPath, function (err, token) {
-    if (err) {
-      getNewToken(oauth2Client, scopes, callback);
-    } else {
-      oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client);
-    }
-  });
+  oauth2Client.credentials = TOKEN;
+  callback(oauth2Client);
 }
 
 /**
