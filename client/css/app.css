@@ -1,0 +1,42 @@
+.section {
+	padding: 4em 2em;
+}
+
+#hero {
+	background: #CCC;
+}
+
+#hero .hero-callout {
+	height: 500px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+#about {
+	background: #EEE;
+}
+
+#room {
+	background: #CCC;
+}
+
+#room ul {
+	list-style: none;
+	margin-left: 0;
+}
+
+#footer {
+	height: 8em;
+	background: #EEE;
+}
+
+/**
+ * Adjust height of Hero responsively
+ */
+// @media screen and (min-width: 64em) {
+// 	#hero .hero-callout {
+// 		height: calc(100vh - 56px);
+// 	}
+// }
