@@ -1,25 +1,149 @@
-.section {
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Roboto:300,400,500');
+
+body, html {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	font-size: 18px;
+	line-height: 24px;
+	color: #f1f1f1;
+	background-color: rgb(50,50,50);
+	// background-image: linear-gradient(-45deg, rgb(50,50,50) 50%, hsl(73, 20%, 25%));
+	// background-repeat: no-repeat;
+}
+
+/**
+ * Typography
+ */
+h1, h2, h3 {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	// font-style: italic;
+	// text-transform: uppercase;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 3rem;
+	line-height: 3.3rem;
+}
+
+h2 {
+	font-size: 2rem;
+	line-height: 2.2rem;
+}
+
+h3 {
+	font-size: 1.5rem;
+	line-height: 1.6rem;
+}
+
+strong {
+	font-weight: 500;
+}
+
+/**
+ * ------ Components -------
+ */
+section {
 	padding: 4em 2em;
+	background: none;
 }
 
+@media (min-width: 40em) {
+	section {
+		display: flex;
+		justify-content: center;
+	}
+
+	section .content {
+		width: 40em;
+	}	
+}
+
+a {
+	text-decoration: none;
+	color: #74acdc;
+}
+
+a.button, button {
+	color: #b2d235;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 500;
+	border: 1px solid currentColor;
+	border-radius: 2px;
+	padding: 0.5em 1em;
+}
+
+a.button:hover,
+a.button:active
+a.button:focus,
+button:hover,
+button:active,
+button:focus {
+	color: #88a419;
+}
+
+/**
+ * ------ Hero -------
+ */
 #hero {
-	background: #CCC;
+	// background: rgb(50,50,50);
+	height: 500px;
+	display: flex;
+	justify-content: center;
 }
 
-#hero .hero-callout {
-	height: 500px;
+#hero .content {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 }
 
+#hero #logo {
+	width: 300px;
+	height: 125px;
+}
+
+@media (min-width: 40em) {
+	#hero #logo {
+		width: 600px;
+		height: 250px;
+	}
+}
+
+#hero p {
+	font-weight: 400;
+	font-size: 20px;
+	text-align: center;
+	font-family: 'Montserrat', sans-serif;
+}
+
+#hero p strong {
+	font-weight: 600;
+}
+
+#hero a.button {
+	margin-top: 1em;
+}
+
+/**
+ * ------ About -------
+ */
 #about {
-	background: #EEE;
+	background: rgb(60,60,60);
 }
 
 #room {
-	background: #CCC;
+	// background: #CCC;
 }
 
 #room ul {
@@ -27,9 +151,9 @@
 	margin-left: 0;
 }
 
-#footer {
-	height: 8em;
-	background: #EEE;
+footer {
+	height: 4em;
+	width: 100%;
 }
 
 /**
