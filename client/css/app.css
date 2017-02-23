@@ -14,8 +14,11 @@ body {
 	line-height: 24px;
 	color: #f1f1f1;
 	background-color: rgb(50,50,50);
-	// background-image: linear-gradient(-45deg, rgb(50,50,50) 50%, hsl(73, 20%, 25%));
-	// background-repeat: no-repeat;
+}
+
+*:focus,
+*:active {
+	outline: none;
 }
 
 /**
@@ -24,8 +27,10 @@ body {
 h1, h2, h3 {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 600;
-	// font-style: italic;
-	// text-transform: uppercase;
+	//
+	font-style: italic;
+	//
+	text-transform: uppercase;
 	margin: 0;
 	padding: 0;
 }
@@ -41,8 +46,9 @@ h2 {
 }
 
 h3 {
-	font-size: 1.5rem;
-	line-height: 1.6rem;
+	font-size: 1.5em;
+	line-height: 1.5em;
+	padding: 1em 0 0.5em 0;
 }
 
 strong {
@@ -53,8 +59,7 @@ strong {
  * ------ Components -------
  */
 section {
-	padding: 4em 2em;
-	background: none;
+	padding: 2em 2em;
 }
 
 @media (min-width: 40em) {
@@ -66,6 +71,51 @@ section {
 	section .content {
 		width: 40em;
 	}	
+}
+
+section.green {
+	background: #b2d235;
+	color: rgb(50,50,50);
+}
+
+.float {
+	background: rgb(50,50,50);
+	color: #f1f1f1;
+	box-shadow: 0 0 50px 10px rgba(0,0,0,0.4);
+	position: relative;
+	padding: 1em 0;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	line-height: 50px;
+}
+
+#booking li {
+	padding: 0 1em;
+	border-radius: 3px;
+}
+
+#booking li.selected {
+	color: #b2d235;
+}
+
+/* #booking li::before {
+	display: inline-block;
+	position: relative;
+	content: '';
+	width: 18px;
+	height: 18px;
+	border: 1px solid #777;
+	border-radius: 15px;
+	margin-right: 15px;
+	top: 3px;
+} */
+
+#booking li:nth-child(odd) {
+	background: rgb(60,60,60);
 }
 
 a {
@@ -91,14 +141,42 @@ button:focus {
 	color: #88a419;
 }
 
+form label {
+	font-size: 0.9em;
+	line-height: 1.5em;
+	font-weight: 400;
+	display: block;
+}
+
+form input:focus,
+form input:active {
+	border-color: #b2d235;
+}
+
+form input {
+	box-sizing: border-box;
+	color: #f1f1f1;
+	font-size: 1em;
+	font-weight: 300;
+	line-height: 50px;
+	margin: 0 0 1em 0;
+	padding: 0 1em;
+	width: 100%;
+	background-color: rgb(70,70,70);
+	border: 1px solid rgb(70,70,70);
+	border-radius: 3px;
+	transition: all 0.2s ease-in-out;
+}
+
 /**
  * ------ Hero -------
  */
 #hero {
-	// background: rgb(50,50,50);
 	height: 500px;
 	display: flex;
 	justify-content: center;
+  background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
+	background-repeat: no-repeat;
 }
 
 #hero .content {
@@ -114,6 +192,10 @@ button:focus {
 }
 
 @media (min-width: 40em) {
+	#hero {
+		height: 600px;
+	}
+
 	#hero #logo {
 		width: 600px;
 		height: 250px;
@@ -139,16 +221,28 @@ button:focus {
  * ------ About -------
  */
 #about {
-	background: rgb(60,60,60);
 }
 
+/**
+ * ------ Room ------
+ */
 #room {
-	// background: #CCC;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 #room ul {
 	list-style: none;
 	margin-left: 0;
+}
+
+/**
+ * ------ Contact ------
+ */
+#contact {
+  background: linear-gradient(-120deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
+  background-repeat: no-repeat;
+  padding: 4em 2em;
 }
 
 footer {
