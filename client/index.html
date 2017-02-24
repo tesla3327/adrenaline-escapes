@@ -58,51 +58,53 @@
           <p>Select a day and time below.</p>
 
           <!-- Date and Time -->
-          <h3>Day</h3>
-          <ul id="day">
-            <li>March 3, 2017</li>
-            <li>March 4, 2017</li>
-            <li class="selected">March 10, 2017</li>
-            <li>March 11, 2017</li>
-          </ul>
+          <div class="narrow">
+            <h3>Day</h3>
+            <ul id="day">
+              <li>March 3, 2017</li>
+              <li>March 4, 2017</li>
+              <li class="selected">March 10, 2017</li>
+              <li>March 11, 2017</li>
+            </ul>
 
-          <h3>Time</h3>
-          <ul id="time">
-            <li>@ 6:00 PM</li>
-            <li>@ 7:00 PM</li>
-            <li>@ 8:00 PM</li>
-            <li class="selected">@ 9:00 PM</li>
-          </ul>
+            <h3>Time</h3>
+            <ul id="time">
+              <li>@ 6:00 PM</li>
+              <li>@ 7:00 PM</li>
+              <li>@ 8:00 PM</li>
+              <li class="selected">@ 9:00 PM</li>
+            </ul>
 
-          <!-- Booking Info -->
+            <!-- Booking Info -->
 
-          <h3>Booking Info</h3>
-          <form>
-            <div class="row">
-              <div class="small-3 columns">
-                <label for="name" class="text-right middle">Name</label>
+            <h3>Booking Info</h3>
+            <form>
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="name" class="text-right middle">Name</label>
+                </div>
+                <div class="small-9 columns">
+                  <input type="text" id="name">
+                </div>
               </div>
-              <div class="small-9 columns">
-                <input type="text" id="name">
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="email" class="text-right middle">Email</label>
+                </div>
+                <div class="small-9 columns">
+                  <input type="text" id="email">
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="small-3 columns">
-                <label for="email" class="text-right middle">Email</label>
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="party-size" class="text-right middle">Party Size</label>
+                </div>
+                <div class="small-3 columns end">
+                  <input type="number" min="2" max="8" id="party-size">
+                </div>
               </div>
-              <div class="small-9 columns">
-                <input type="text" id="email">
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-3 columns">
-                <label for="party-size" class="text-right middle">Party Size</label>
-              </div>
-              <div class="small-3 columns end">
-                <input type="number" min="2" max="8" id="party-size">
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
 
         </div>
       </section>
