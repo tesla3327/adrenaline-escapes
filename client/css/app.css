@@ -59,7 +59,7 @@ strong {
  * ------ Components -------
  */
 section {
-	padding: 2em 2em;
+	padding: 1em 1em;
 }
 
 @media (min-width: 40em) {
@@ -81,9 +81,9 @@ section.green {
 .float {
 	background: rgb(50,50,50);
 	color: #f1f1f1;
-	box-shadow: 0 0 50px 10px rgba(0,0,0,0.4);
+	box-shadow: 0 0 35px 10px rgba(0,0,0,0.4);
 	position: relative;
-	padding: 1em 0;
+	padding: 0.5em 0;
 }
 
 ul {
@@ -95,6 +95,7 @@ ul {
 
 #booking li {
 	padding: 0 1em;
+	margin: 5px 0;
 	border-radius: 3px;
 }
 
@@ -115,7 +116,7 @@ ul {
 } */
 
 #booking li:nth-child(odd) {
-	background: rgb(60,60,60);
+	background: rgb(70,70,70);
 }
 
 a {
@@ -124,12 +125,18 @@ a {
 }
 
 a.button, button {
-	color: #b2d235;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 500;
-	border: 1px solid currentColor;
-	border-radius: 2px;
 	padding: 0.5em 1em;
+	background: #b2d235;
+	color: rgb(60,60,60);
+	border-radius: 2px;
+}
+
+a.button.hollow, button.hollow {
+	color: #b2d235;
+	border: 1px solid currentColor;
+	background: none;
 }
 
 a.button:hover,
