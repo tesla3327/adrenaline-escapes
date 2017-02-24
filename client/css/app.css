@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Roboto:300,400,500');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Roboto:300,400,500');
 
 body, html {
 	height: 100%;
@@ -48,7 +48,7 @@ h2 {
 h3 {
 	font-size: 1.5em;
 	line-height: 1.5em;
-	padding: 1em 0 0.5em 0;
+	padding: 1.5em 0 0 0;
 }
 
 strong {
@@ -68,6 +68,10 @@ section {
 	box-shadow: 0 0 35px 10px rgba(0,0,0,0.4);
 	position: relative;
 	padding: 0.5em 0;
+}
+
+.float section + section {
+	padding-top: 2em;
 }
 
 ul {
@@ -207,8 +211,8 @@ form input {
  * ------ Room ------
  */
 #room {
-	padding-top: 0;
-	padding-bottom: 0;
+/* 	padding-top: 0;
+	padding-bottom: 0; */
 }
 
 #room ul {
@@ -222,7 +226,7 @@ form input {
 #contact {
   background: linear-gradient(-120deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
   background-repeat: no-repeat;
-  padding: 4em 2em;
+  padding: 3em 2em;
 }
 
 footer {
@@ -251,7 +255,7 @@ footer {
 	section {
 		display: flex;
 		justify-content: center;
-		padding: 1em 2em;
+		padding: 2em 2em;
 	}
 
 	section .content {
@@ -262,8 +266,29 @@ footer {
 		align-items: center;
 	}
 
-	.narrow {
+	.narrow-content {
 		width: 20em;
+	}
+}
+
+@media (min-width: 1000px) {
+	.narrow-content {
+		width: 50em;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.date-time {
+		display: flex;
+	}
+
+	.selection, .booking-form {
+		width: 20em;
+	}
+
+	.selection + .selection {
+		padding-left: 2em;
 	}
 }
 
