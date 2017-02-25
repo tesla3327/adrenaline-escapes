@@ -62,12 +62,20 @@ section {
 	padding: 1em 1em;
 }
 
+.gradient {
+  	background: linear-gradient(to left, hsl(73, 20%, 25%) , rgb(50,50,50));
+   /* background:  hsl(73, 20%, 25%); */
+  	background-repeat: no-repeat;
+  	padding-top: 3em;
+  	padding-bottom: 3em;
+}
+
 .float {
 	background: rgb(50,50,50);
 	color: #f1f1f1;
 	box-shadow: 0 0 35px 10px rgba(0,0,0,0.4);
 	position: relative;
-	padding: 0.5em 0;
+	padding: 0;
 }
 
 .float section + section {
@@ -224,14 +232,38 @@ form input {
  * ------ Contact ------
  */
 #contact {
-  background: linear-gradient(-120deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
-  background-repeat: no-repeat;
-  padding: 3em 2em;
+  background: linear-gradient(-150deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
 }
 
 footer {
-	height: 4em;
+	/* height: 4em; */
 	width: 100%;
+}
+
+footer p {
+	font-size: 0.8em;
+	font-weight: 500;
+	line-height: 1.3em;
+	text-align: center;
+	margin:  0;
+	padding: 1em;
+	color: #b2d235;
+}
+
+.google-map {
+	padding-top: 0;
+	margin-left: 0em;
+	width: 100vw;
+	overflow: hidden;
+}
+
+.google-map.small {
+	max-height: 80vw;
+}
+
+.google-map.large {
+	max-height: 500px;
+	display: none;
 }
 
 /**
@@ -269,6 +301,14 @@ footer {
 	.narrow-content {
 		width: 20em;
 	}
+
+	.google-map.small {
+		display: none;
+	}
+
+	.google-map.large {
+		display: block;
+	}
 }
 
 @media (min-width: 1000px) {
@@ -289,6 +329,9 @@ footer {
 
 	.selection + .selection {
 		padding-left: 2em;
+	}
+
+	.google-map {
 	}
 }
 
