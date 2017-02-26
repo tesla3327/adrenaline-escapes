@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300,400,500,700i');
+// @import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300,400,500,700i');
 
 body, html {
 	height: 100%;
@@ -183,6 +183,10 @@ form input {
 	transition: all 0.2s ease-in-out;
 }
 
+.hide {
+	display: none;
+}
+
 /**
  * ------ Hero -------
  */
@@ -238,6 +242,24 @@ form input {
 #room ul {
 	list-style: none;
 	margin-left: 0;
+}
+
+/**
+ * ------ Booking ------
+ */
+#booking li {
+	cursor: pointer;
+}
+
+#booking .cta {
+	display: flex;
+	justify-content: center;
+	margin-top: 2em;
+	margin-bottom: 1em;
+}
+
+#select-a-date {
+	text-align: left;
 }
 
 /**
