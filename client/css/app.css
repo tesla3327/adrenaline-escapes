@@ -177,6 +177,24 @@ form input {
 	transition: all 0.2s ease-in-out;
 }
 
+form select {
+	font-size: 1em;
+	font-weight: 300;
+	border: none;
+	background: rgb(70,70,70);
+	color: #f1f1f1;
+	width: calc(100% - 1em);
+	height: 50px;
+}
+
+form .select {
+	border: 1px solid rgb(70,70,70);
+	border-radius: 2px;
+	background: rgb(70,70,70);
+	margin: 0 0 1em 0;
+	padding-left: 0.6em;
+}
+
 .hide {
 	display: none;
 }

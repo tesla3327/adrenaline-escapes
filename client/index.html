@@ -19,7 +19,7 @@
 
         <img src="img/ae_logo_dark.png" id="logo">
         <p>Steinbach's most <strong><em>thrilling</em></strong> experience</p>
-        <a href="#" class="button hollow"><span>Book Now</span></a>
+        <a href="#booking" class="button hollow"><span>Book Now</span></a>
 
       </div>
     </section>
@@ -148,41 +148,37 @@
                 </div>
             </div>
 
-            <div class="cta">
-              <a href="#" class="button hollow"><span>Book Now</span></a>
-            </div>
-
             <!-- Booking Info -->
-
-            <div class="booking-form hide">
+            <div class="booking-form hide" id="booking-info">
                 <h3>Booking Info</h3>
                 <form>
-                  <div class="row">
-                    <div class="small-3 columns">
-                      <label for="name" class="text-right middle">Name</label>
-                    </div>
-                    <div class="small-9 columns">
-                      <input type="text" id="name">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="small-3 columns">
-                      <label for="email" class="text-right middle">Email</label>
-                    </div>
-                    <div class="small-9 columns">
-                      <input type="text" id="email">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="small-3 columns">
-                      <label for="party-size" class="text-right middle">Party Size</label>
-                    </div>
-                    <div class="small-3 columns end">
-                      <input type="number" min="2" max="8" id="party-size">
-                    </div>
+                  <label for="name" class="text-right middle">Name</label>
+                  <input type="text" id="name">
+
+                  <label for="email" class="text-right middle">Email</label>
+                  <input type="email" id="email">
+
+                  <label for="phone" class="text-right middle">Phone</label>
+                  <input type="tel" id="phone">
+
+                  <label for="party-size" class="text-right middle">Party Size <em>(We recommend 4-6 people)</em></label>
+                  <div class="select">
+                    <select id="party-size">
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4" selected>4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                    </select>
                   </div>
                 </form>
              </div>
+          </div>
+
+          <div class="cta">
+            <a href="#" class="button hollow"><span>Book Now</span></a>
           </div>
 
         </div>

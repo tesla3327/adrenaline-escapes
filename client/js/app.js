@@ -137,6 +137,8 @@ function handleTimeClick(timeObj) {
 	// Deselect currently selected
 	var curr = getSelectedTime(state);
 
+	show('booking-info');
+
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
 		if (curr) {
