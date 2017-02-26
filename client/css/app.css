@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300,400,500,700i');
+@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300i,400,500,700i');
 
 body, html {
 	height: 100%;
@@ -72,10 +72,10 @@ section.alternate {
 
 .gradient {
   	background: linear-gradient(to left, hsl(73, 20%, 25%) , rgb(50,50,50));
-   /* background:  hsl(73, 20%, 25%); */
+  	/* background:  hsl(73, 20%, 25%); */
   	background-repeat: no-repeat;
-  	padding-top: 3em;
-  	padding-bottom: 3em;
+  	padding-top: 4em;
+  	padding-bottom: 4em;
 }
 
 .float {
@@ -83,7 +83,7 @@ section.alternate {
 	color: #f1f1f1;
 	box-shadow: 0 0 35px 10px rgba(0,0,0,0.4);
 	position: relative;
-	padding: 0;
+	padding: 2em 0;
 }
 
 .float section + section {
@@ -132,19 +132,23 @@ a {
 	color: #74acdc;
 }
 
-a.button, button {
+a.button {
 	font-family: 'Roboto', sans-serif;
 	font-weight: 500;
-	padding: 0.5em 1em;
+	padding: 0.5em 2em;
 	background: #b2d235;
 	color: rgb(60,60,60);
-	border-radius: 2px;
 }
 
-a.button.hollow, button.hollow {
+a.button.hollow {
 	color: #b2d235;
 	border: 1px solid currentColor;
 	background: none;
+}
+
+a.button.hollow span {
+	color: #b2d235;
+	display: inline-block;
 }
 
 a.button:hover,
@@ -194,7 +198,7 @@ form input {
 	height: 500px;
 	display: flex;
 	justify-content: center;
-  background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
+  	background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
 	background-repeat: no-repeat;
 }
 
@@ -247,10 +251,6 @@ form input {
 /**
  * ------ Booking ------
  */
-#booking li {
-	cursor: pointer;
-}
-
 #booking .cta {
 	display: flex;
 	justify-content: center;
@@ -262,6 +262,18 @@ form input {
 	text-align: left;
 }
 
+#booking li {
+	position: relative;
+	opacity: 0;
+	// transofr: -5px;
+	transform: translateX(-10px);
+}
+
+#booking ul.appendCompleted li {
+	opacity: 1;
+	transform: translateX(0);
+}
+
 /**
  * ------ Contact ------
  */
@@ -269,9 +281,17 @@ form input {
   background: linear-gradient(-150deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
 }
 
+/**
+ * ------ Footer ------
+ */
 footer {
 	/* height: 4em; */
 	width: 100%;
+}
+
+footer.float {
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 footer p {
@@ -300,11 +320,24 @@ footer p {
 	display: none;
 }
 
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 /**
  * ------ Breakpoints ------
  */
 
 @media (min-width: 700px) {
+	body {
+	    -webkit-text-size-adjust: none;
+	}
+
 	#hero {
 		height: 700px;
 	}
@@ -330,6 +363,52 @@ footer p {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+
+	a.button.hollow {
+		position: relative;
+		cursor: pointer;
+	}
+
+	a.button.hollow:active {
+		top: 1px;	
+	}
+
+	a.button.hollow {
+		transition: transform 0.2s ease-in-out,
+					color 0.2s ease-in-out 0.2s,
+					background 0.2s ease-in-out 0.2s,
+					padding 0.2s ease-in-out 0.2s;
+	}
+
+	a.button.hollow:hover {
+		background: #b2d235;
+		padding-left: 4em;
+		padding-right: 4em;		
+		-webkit-transform: skew(-15deg) !important;
+	    -moz-transform: skew(-15deg) !important;
+	    -o-transform: skew(-15deg) !important;
+	    transform: skew(-15deg) !important;
+	    transition: color 0.2s ease-in-out,
+					background 0.2s ease-in-out,
+					padding 0.2s ease-in-out,
+					transform 0.2s ease-in-out 0.2s;
+
+	}
+
+	a.button.hollow span {
+		transition: transform 0.2s ease-in-out,
+					color 0.2s ease-in-out 0.2s;
+	}
+
+	a.button.hollow:hover span {
+		color: rgb(50,50,50);
+		-webkit-transform: skew(15deg) !important;
+	    -moz-transform: skew(15deg) !important;
+	    -o-transform: skew(15deg) !important;
+	    transform: skew(15deg) !important;
+		transition: color 0.2s ease-in-out,
+					transform 0.2s ease-in-out 0.2s;
 	}
 
 	.narrow-content {
@@ -361,6 +440,43 @@ footer p {
 		-o-transform: skew(10deg) !important;
 		transform: skew(10deg) !important;
 	}
+
+	// #hero img {
+	// 	position: relative;
+	// 	animation-fill-mode: both;
+	// 	-webkit-animation-fill-mode: both;
+	// 	animation: appear 1s cubic-bezier(0.4, 0, 1, 1) 0s;
+	// 	animation-name: appear;
+	// }
+
+	// #hero p {
+	// 	position: relative;
+	// 	animation-fill-mode: both;
+	// 	opacity: 0;
+	// 	-webkit-animation-fill-mode: both;
+	// 	animation: appear 1s cubic-bezier(0.4, 0, 1, 1) 0.3s;
+	// 	animation-name: appear;
+	// }
+
+	// #hero a {
+	// 	position: relative;
+	// 	animation-fill-mode: both;
+	// 	-webkit-animation-fill-mode: both;
+	// 	animation: appear 1s cubic-bezier(0.4, 0, 1, 1) 0.6s;
+	// }
+
+	#booking li {
+		cursor: pointer;
+		opacity: 0;
+	}
+
+	#booking ul.appendCompleted li {
+		opacity: 1;
+	}
+
+	#booking li:hover {
+		background: rgb(90,90,90);
+	}
 }
 
 @media (min-width: 1000px) {
@@ -381,9 +497,6 @@ footer p {
 
 	.selection + .selection {
 		padding-left: 2em;
-	}
-
-	.google-map {
 	}
 }
 

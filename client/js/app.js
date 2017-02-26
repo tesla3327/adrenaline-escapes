@@ -1,4 +1,6 @@
-var state = {};
+var state = {
+	slideAnimation: true,
+};
 
 /**
  * Stub out some data
@@ -108,6 +110,9 @@ function handleDateClick(dateObj) {
 		// Select new state
 		dateObj.selected = true;
 
+		// We want to do the sliding animation
+		state.slideAnimation = true;
+
 		// Re-render
 		render(state);
 	}
@@ -120,6 +125,8 @@ function handleTimeClick(timeObj) {
 	// Deselect currently selected
 	var curr = getSelectedTime(state);
 
+	console.log(timeObj);
+
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
 		if (curr) {
@@ -128,6 +135,13 @@ function handleTimeClick(timeObj) {
 		timeObj.selected = true;
 		renderTimes(state);
 	}
+}
+
+/**
+ * Adds a transition animation to a <li>
+ */
+function addListTransition(li, offset) {
+	li.style.transition = 'all 0.5s ease ' + (offset *  0.05) + 's';
 }
 
 /**
@@ -140,10 +154,13 @@ function renderDates(state) {
 	// Get all of the dates we have
 	var dates = Object.keys(state.bookings);
 
-	dates.forEach( function(date) {
+	dates.forEach( function(date, i) {
 		var li = document.createElement('li');
 		li.innerText = date;
 		li.onclick = handleDateClick.bind(null, state.bookings[date]);
+
+		// Add style
+		addListTransition(li, i);
 
 		if (state.bookings[date].selected) {
 			li.classList.add('selected');
@@ -151,6 +168,11 @@ function renderDates(state) {
 
 		elem.appendChild(li);
 	});
+
+	// The transition will not work without being "async"
+	setTimeout(function() {
+		elem.classList.add('appendCompleted');	
+	}, 0);
 }
 
 /**
@@ -158,6 +180,12 @@ function renderDates(state) {
  */
 function renderTimes(state) {
 	var elem = document.getElementById('js-time');
+
+	// If we want to do the slide animation
+	if (state.slideAnimation) {
+		elem.classList.remove('appendCompleted');
+		state.slideAnimation = false;
+	}
 	emptyElement(elem);
 
 	// Check which date has been selected
@@ -173,10 +201,12 @@ function renderTimes(state) {
 		hide('select-a-date');
 
 		// Render all of the times
-		selectedDate.times.forEach(function(time) {
+		selectedDate.times.forEach(function(time, i) {
 			var li = document.createElement('li');
 			li.innerText = time.time;
 			li.onclick = handleTimeClick.bind(null, time);
+
+			addListTransition(li, i);
 
 			if (time.selected) {
 				li.classList.add('selected');
@@ -184,6 +214,11 @@ function renderTimes(state) {
 
 			elem.appendChild(li);
 		});
+
+		// The transition will not work without being "async"
+		setTimeout(function() {
+			elem.classList.add('appendCompleted');	
+		}, 0);
 	}
 }
 
