@@ -2,6 +2,9 @@ var state = {
 	slideAnimation: true,
 };
 
+// These transitions are added without any delay
+var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
+
 /**
  * Stub out some data
  */
@@ -10,41 +13,41 @@ function getBookings() {
 		'March 3, 2017': {
 			date: 'March 3, 2017',
 			times: [
-				{ date: 'March 3, 2017', time: '5:00 PM', open: true },
-				{ date: 'March 3, 2017', time: '6:30 PM', open: true },
-				{ date: 'March 3, 2017', time: '8:00 PM', open: true },
-				{ date: 'March 3, 2017', time: '9:30 PM', open: true },
+				{ date: 'March 3, 2017', time: '5:00 PM', booked: true },
+				{ date: 'March 3, 2017', time: '6:30 PM', booked: true },
+				{ date: 'March 3, 2017', time: '8:00 PM', booked: true },
+				{ date: 'March 3, 2017', time: '9:30 PM', booked: true },
 			],
 		},
 		'March 4, 2017': {
 			date: 'March 4, 2017',
 			times: [
-				{ date: 'March 4, 2017', time: '2:00 PM', open: true },
-				{ date: 'March 4, 2017', time: '3:30 PM', open: true },
-				{ date: 'March 4, 2017', time: '5:00 PM', open: true },
-				{ date: 'March 4, 2017', time: '6:30 PM', open: true },
-				{ date: 'March 4, 2017', time: '8:00 PM', open: true },
-				{ date: 'March 4, 2017', time: '9:30 PM', open: true },
+				{ date: 'March 4, 2017', time: '2:00 PM', booked: false },
+				{ date: 'March 4, 2017', time: '3:30 PM', booked: true },
+				{ date: 'March 4, 2017', time: '5:00 PM', booked: true },
+				{ date: 'March 4, 2017', time: '6:30 PM', booked: false },
+				{ date: 'March 4, 2017', time: '8:00 PM', booked: false },
+				{ date: 'March 4, 2017', time: '9:30 PM', booked: true },
 			],
 		},
 		'March 10, 2017': {
 			date: 'March 10, 2017',
 			times: [
-				{ date: 'March 10, 2017', time: '5:00 PM', open: true },
-				{ date: 'March 10, 2017', time: '6:30 PM', open: true },
-				{ date: 'March 10, 2017', time: '8:00 PM', open: true },
-				{ date: 'March 10, 2017', time: '9:30 PM', open: true },
+				{ date: 'March 10, 2017', time: '5:00 PM', booked: false },
+				{ date: 'March 10, 2017', time: '6:30 PM', booked: false },
+				{ date: 'March 10, 2017', time: '8:00 PM', booked: false },
+				{ date: 'March 10, 2017', time: '9:30 PM', booked: false },
 			],
 		},
 		'March 11, 2017': {
 			date: 'March 11, 2017',
 			times: [
-				{ date: 'March 11, 2017', time: '2:00 PM', open: true },
-				{ date: 'March 11, 2017', time: '3:30 PM', open: true },
-				{ date: 'March 11, 2017', time: '5:00 PM', open: true },
-				{ date: 'March 11, 2017', time: '6:30 PM', open: true },
-				{ date: 'March 11, 2017', time: '8:00 PM', open: true },
-				{ date: 'March 11, 2017', time: '9:30 PM', open: true },
+				{ date: 'March 11, 2017', time: '2:00 PM', booked: false },
+				{ date: 'March 11, 2017', time: '3:30 PM', booked: false },
+				{ date: 'March 11, 2017', time: '5:00 PM', booked: false },
+				{ date: 'March 11, 2017', time: '6:30 PM', booked: false },
+				{ date: 'March 11, 2017', time: '8:00 PM', booked: false },
+				{ date: 'March 11, 2017', time: '9:30 PM', booked: false },
 			],
 		},
 	};
@@ -74,6 +77,15 @@ function getSelectedTime(state) {
 		.filter(function(timeObj) {
 			return timeObj.selected;
 		})[0];
+}
+
+/**
+ * Check if a date is fully booked
+ */
+function isDateFullyBooked(date) {
+	return date.times.every(function(t) {
+		return t.booked;
+	});
 }
 
 function emptyElement(element){
@@ -125,8 +137,6 @@ function handleTimeClick(timeObj) {
 	// Deselect currently selected
 	var curr = getSelectedTime(state);
 
-	console.log(timeObj);
-
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
 		if (curr) {
@@ -141,7 +151,10 @@ function handleTimeClick(timeObj) {
  * Adds a transition animation to a <li>
  */
 function addListTransition(li, offset) {
-	li.style.transition = 'all 0.5s ease ' + (offset *  0.05) + 's';
+	li.style.transition = [
+		'opacity 0.5s ease ' + (offset *  0.05) + 's',
+		'transform 0.5s ease ' + (offset *  0.05) + 's',
+	].concat(transitionPrefix).join(',');
 }
 
 /**
@@ -157,13 +170,21 @@ function renderDates(state) {
 	dates.forEach( function(date, i) {
 		var li = document.createElement('li');
 		li.innerText = date;
-		li.onclick = handleDateClick.bind(null, state.bookings[date]);
 
 		// Add style
 		addListTransition(li, i);
 
+		// Selected
 		if (state.bookings[date].selected) {
 			li.classList.add('selected');
+		}
+
+		// Booked
+		if (isDateFullyBooked(state.bookings[date])) {
+			li.classList.add('booked');
+		} else {
+			// Add click handler only if we can actually book it
+			li.onclick = handleDateClick.bind(null, state.bookings[date]);
 		}
 
 		elem.appendChild(li);
@@ -204,12 +225,18 @@ function renderTimes(state) {
 		selectedDate.times.forEach(function(time, i) {
 			var li = document.createElement('li');
 			li.innerText = time.time;
-			li.onclick = handleTimeClick.bind(null, time);
 
 			addListTransition(li, i);
 
 			if (time.selected) {
 				li.classList.add('selected');
+			}
+
+			// If we are booked we don't need a click handler
+			if (time.booked) {
+				li.classList.add('booked');
+			} else {
+				li.onclick = handleTimeClick.bind(null, time);
 			}
 
 			elem.appendChild(li);
