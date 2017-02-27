@@ -98,7 +98,11 @@ const getAllBookings = () => {
         partySize: e[4],
       }
     })
-    .filter( e => e.date !== undefined && e.time !== undefined );
+    .filter( e => e.date !== undefined && e.time !== undefined )
+    // Add whether or not the time slot has been booked
+    .map( e => {
+      return Object.assign({}, e, { booked: !bookingIsAvailable(e) });
+    });
 
     return bookings;
   });
@@ -113,13 +117,48 @@ const bookingIsAvailable = e => {
 };
 
 /**
+ * Remove all personal data from the bookings object
+ */
+const scrubPersonalData = e => {
+  return {
+    date: e.date,
+    time: e.time,
+    booked: e.booked !== undefined ? e.booked : !bookingIsAvailable(e),
+  };
+};
+
+/**
+ * Groups the bookings list by date
+ */
+const groupByDate = bookings => {
+  console.log(bookings);
+
+  const grouped = bookings.reduce( (prev, next) => {
+    // console.log('Prev:', prev);
+    // console.log('Next:', next);
+
+    if (!prev[next.date] || !prev[next.date].times) {
+      prev[next.date] = {
+        date: next.date,
+        times: [],
+      };
+    }
+
+    prev[next.date].times.push(next);
+
+    return prev;
+  }, {});
+
+  return grouped;
+};
+
+/**
  * Filter bookings down to what is available
  */
 const getAvailableBookings = () =>
   getAllBookings().then( bookings => {
-    return bookings.filter( e => {
-      return bookingIsAvailable(e);
-    });
+    return bookings
+      .filter( e => bookingIsAvailable(e) );
   });
 
 /**
@@ -164,6 +203,8 @@ module.exports = {
   getAllBookings,
   getAvailableBookings,
   makeBooking,
+  scrubPersonalData,
+  groupByDate,
 };
 
 // init().then( getAvailableBookings ).then( console.log );

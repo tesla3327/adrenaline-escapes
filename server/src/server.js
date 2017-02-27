@@ -3,7 +3,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const sheets = require('./sheets');
 
-sheets.initialize();
+sheets.initialize().then(() => {
+	// sheets.getAllBookings()
+	// 	.then( bookings => {
+	// 		const data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
+	// 	});	
+});
+
 
 // Define constants
 const PORT = process.env.PORT || 3000;
@@ -24,9 +30,11 @@ app.use( bodyParser.json() );
  * Return only the available bookings
  */
 app.get('/bookings', (req, res) => {
-	sheets.getAvailableBookings()
+	// We want all the bookings, but to make sure that no personal data is sent
+	sheets.getAllBookings()
 		.then( bookings => {
-			res.send(bookings);
+			const data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
+			res.send(data);
 		});
 });
 

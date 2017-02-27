@@ -4,53 +4,68 @@ var state = {
 
 // These transitions are added without any delay
 var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
+var SERVER = 'http://127.0.0.1:3000/';
 
 /**
  * Stub out some data
  */
-function getBookings() {
-	return {
-		'March 3, 2017': {
-			date: 'March 3, 2017',
-			times: [
-				{ date: 'March 3, 2017', time: '5:00 PM', booked: true },
-				{ date: 'March 3, 2017', time: '6:30 PM', booked: true },
-				{ date: 'March 3, 2017', time: '8:00 PM', booked: true },
-				{ date: 'March 3, 2017', time: '9:30 PM', booked: true },
-			],
-		},
-		'March 4, 2017': {
-			date: 'March 4, 2017',
-			times: [
-				{ date: 'March 4, 2017', time: '2:00 PM', booked: false },
-				{ date: 'March 4, 2017', time: '3:30 PM', booked: true },
-				{ date: 'March 4, 2017', time: '5:00 PM', booked: true },
-				{ date: 'March 4, 2017', time: '6:30 PM', booked: false },
-				{ date: 'March 4, 2017', time: '8:00 PM', booked: false },
-				{ date: 'March 4, 2017', time: '9:30 PM', booked: true },
-			],
-		},
-		'March 10, 2017': {
-			date: 'March 10, 2017',
-			times: [
-				{ date: 'March 10, 2017', time: '5:00 PM', booked: false },
-				{ date: 'March 10, 2017', time: '6:30 PM', booked: false },
-				{ date: 'March 10, 2017', time: '8:00 PM', booked: false },
-				{ date: 'March 10, 2017', time: '9:30 PM', booked: false },
-			],
-		},
-		'March 11, 2017': {
-			date: 'March 11, 2017',
-			times: [
-				{ date: 'March 11, 2017', time: '2:00 PM', booked: false },
-				{ date: 'March 11, 2017', time: '3:30 PM', booked: false },
-				{ date: 'March 11, 2017', time: '5:00 PM', booked: false },
-				{ date: 'March 11, 2017', time: '6:30 PM', booked: false },
-				{ date: 'March 11, 2017', time: '8:00 PM', booked: false },
-				{ date: 'March 11, 2017', time: '9:30 PM', booked: false },
-			],
-		},
+// function getBookings() {
+// 	return {
+// 		'March 3, 2017': {
+// 			date: 'March 3, 2017',
+// 			times: [
+// 				{ date: 'March 3, 2017', time: '5:00 PM', booked: true },
+// 				{ date: 'March 3, 2017', time: '6:30 PM', booked: true },
+// 				{ date: 'March 3, 2017', time: '8:00 PM', booked: true },
+// 				{ date: 'March 3, 2017', time: '9:30 PM', booked: true },
+// 			],
+// 		},
+// 		'March 4, 2017': {
+// 			date: 'March 4, 2017',
+// 			times: [
+// 				{ date: 'March 4, 2017', time: '2:00 PM', booked: false },
+// 				{ date: 'March 4, 2017', time: '3:30 PM', booked: true },
+// 				{ date: 'March 4, 2017', time: '5:00 PM', booked: true },
+// 				{ date: 'March 4, 2017', time: '6:30 PM', booked: false },
+// 				{ date: 'March 4, 2017', time: '8:00 PM', booked: false },
+// 				{ date: 'March 4, 2017', time: '9:30 PM', booked: true },
+// 			],
+// 		},
+// 		'March 10, 2017': {
+// 			date: 'March 10, 2017',
+// 			times: [
+// 				{ date: 'March 10, 2017', time: '5:00 PM', booked: false },
+// 				{ date: 'March 10, 2017', time: '6:30 PM', booked: false },
+// 				{ date: 'March 10, 2017', time: '8:00 PM', booked: false },
+// 				{ date: 'March 10, 2017', time: '9:30 PM', booked: false },
+// 			],
+// 		},
+// 		'March 11, 2017': {
+// 			date: 'March 11, 2017',
+// 			times: [
+// 				{ date: 'March 11, 2017', time: '2:00 PM', booked: false },
+// 				{ date: 'March 11, 2017', time: '3:30 PM', booked: false },
+// 				{ date: 'March 11, 2017', time: '5:00 PM', booked: false },
+// 				{ date: 'March 11, 2017', time: '6:30 PM', booked: false },
+// 				{ date: 'March 11, 2017', time: '8:00 PM', booked: false },
+// 				{ date: 'March 11, 2017', time: '9:30 PM', booked: false },
+// 			],
+// 		},
+// 	};
+// }
+
+/**
+ * Fetch bookings
+ */
+function getBookings(cb) {
+	var req = new XMLHttpRequest();
+
+	req.onload = function() {
+		cb( JSON.parse(this.responseText) );
 	};
+
+	req.open('GET', SERVER + 'bookings');
+	req.send();
 }
 
 /**
@@ -270,8 +285,10 @@ function render(state) {
  * Entry point for the page
  */
 function init() {
-	state.bookings = getBookings();
-	render(state);
+	getBookings(function(bookings) {
+		state.bookings = bookings;
+		render(state);
+	});
 }
 
 window.onload = init;
