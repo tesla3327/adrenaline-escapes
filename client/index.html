@@ -160,23 +160,14 @@
                   <input type="tel" id="phone">
 
                   <label for="party-size" class="text-right middle">Party Size <em>(We recommend 4-6 people)</em></label>
-                  <div class="select">
-                    <select id="party-size">
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4" selected>4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                    </select>
-                  </div>
+                  <input type="tel" id="party-size">
+
                 </form>
              </div>
           </div>
 
           <div class="cta">
-            <a href="#" class="button hollow"><span>Book Now</span></a>
+            <a class="button hollow" id="book" onclick="handleBook()"><span>Book Now</span></a>
           </div>
 
         </div>

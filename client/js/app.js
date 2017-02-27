@@ -68,6 +68,63 @@ function getBookings(cb) {
 	req.send();
 }
 
+function getValueOfInput(id) {
+	return document.getElementById(id).value;
+}
+
+/**
+ * Get booking info from the form
+ */
+function getBookingInfo() {
+	return {
+		name: getValueOfInput('name'),
+		email: getValueOfInput('email'),
+		phone: getValueOfInput('phone'),
+		partySize: getValueOfInput('party-size'),
+	};
+}
+
+var partySizeMalformed = 'Party size must be a number between 2-8';
+function validatePartySize(partySize) {
+	var result = '';
+
+	if (partySize === '') {
+		result = 'Please enter a party size between 2-8';
+	} else {
+		console.log('hello');
+		try {
+			var num = parseInt(partySize, 10);
+
+			console.log(num);
+
+			if (isNaN(num)) {
+				console.log('error 1');
+				result = partySizeMalformed;
+			} else if (num > 8 || num < 2) {
+				result = partySizeMalformed;
+			}
+		} catch (e) {
+			console.log('error 2');
+			result = partySizeMalformed;
+			console.error(e);
+		}
+	}
+
+	return result;
+}
+
+/**
+ * Validate the booking info
+ */
+function validateBookingInfo(info) {
+	return {
+		name: info.name !== '' ? '' : 'Please enter a name',
+		email: info.email !== '' ? '' : 'Please enter an email',
+		phone: info.phone !== '' ? '' : 'Please enter a phone number',
+		partySize: validatePartySize(info.partySize),
+	}
+}
+
 /**
  * Get the selected date from the state tree
  */
@@ -162,6 +219,14 @@ function handleTimeClick(timeObj) {
 		timeObj.selected = true;
 		renderTimes(state);
 	}
+}
+
+/**
+ * Make the booking!
+ */
+function handleBook() {
+	console.log(getBookingInfo());
+	console.log(validateBookingInfo(getBookingInfo()));
 }
 
 /**
