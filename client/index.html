@@ -47,21 +47,19 @@
             <h2>Bank Heist</h2>
           </div>
           <p>
-            You are a member of a successful crime syndicate, and your specialty has always been safe cracking. Today, you’ll be facing your greatest challenge yet, as you and your team attempt a heist at the Valley Isle Bank.
+            You are Southeastern Manitoba’s most successful crime syndicate.  Today, you’ll be facing your greatest challenge yet; a heist at the Stoney Brook Bank.
+          </p>
+          
+          <p>   
+            Your recon team has just completed phase one of the heist &mdash; they have paid the janitor a generous sum of money in return for granting you access to the bank manager’s office.  They also report that they have suspended the security system for 60 minutes.
           </p>
 
           <p>
-            Your recon team has just completed phase one of the heist – they have ensured the building is empty and gained access to the bank manager’s office, where the door to the vault awaits. They have assessed the situation and have reported that this particular vault is going to be difficult to compromise. They have discreetly hidden clues, tools and hints around the office which you will need to complete your job as safe cracker.
+            They have hacked into the bank manager’s computer, and will use it to display how much time you have remaining.  They will also be digging through files and emails and will provide to you any helpful information they come across, should you require it.
           </p>
 
           <p>
-            Recon also reports that they have suspended the security system for 55 minutes. After that amount of time, the alarm will be activated, and you will have 5 minutes from that point to escape before law enforcement arrives.
-          </p>
-
-          <p>
-            If you do manage to enter the vault, you will have to make a crucial decision:
-            <br />
-            take the available money and run, or stay just a little longer to try to significantly increase your take!
+            Once you have gained access to the vault, grab as much money as you can, and escape through the emergency exit before the alarm sounds.  Good luck.  You’ll need it.
           </p>
 
         </div>
@@ -75,7 +73,7 @@
             <h2>Pricing</h2>
           </div>
           <p>
-            <strong>$20</strong> per person, with a <strong>$100</strong> room minimum.
+            <strong>$20</strong> per person, or <strong>$100</strong> minimum booking.
           </p>
 
           <table>
@@ -124,50 +122,73 @@
           <div class="fancy-heading">
             <h2>Book your escape!</h2>
           </div>
-          <p>Select a day and time below.</p>
 
-          <!-- Date and Time -->
-          <div class="narrow-content">
-
-            <div class="date-time">
-                <div class="selection">
-                    <h3>Day</h3>
-                    <ul id="js-date">
-                      <!-- Populated by JS -->
-                    </ul>
-                </div>
-
-                <div class="selection">
-                    <h3>Time</h3>
-                    <p id="select-a-date"><em>Please select a day</em></p>
-                    <ul id="js-time" class="hide">
-                      <!-- Populated by JS -->
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Booking Info -->
-            <div class="booking-form hide" id="booking-info">
-                <h3>Booking Info</h3>
-                <form>
-                  <label for="name" class="text-right middle">Name</label>
-                  <input type="text" id="name">
-
-                  <label for="email" class="text-right middle">Email</label>
-                  <input type="email" id="email">
-
-                  <label for="phone" class="text-right middle">Phone</label>
-                  <input type="tel" id="phone">
-
-                  <label for="party-size" class="text-right middle">Party Size <em>(We recommend 4-6 people)</em></label>
-                  <input type="tel" id="party-size">
-
-                </form>
-             </div>
+          <div id="booking-success" class="hide">
+            <!-- <h3>Awesome!</h3> -->
+            <p>You have successfully booked an escape at <strong><em>Adrenaline Escapes!</em></strong></p>
+            <p><strong>Date:</strong> <span id="success-date"></span></p>
+            <p><strong>Time:</strong> <span id="success-time"></span></p>
           </div>
 
-          <div class="cta">
-            <a class="button hollow" id="book" onclick="handleBook()"><span>Book Now</span></a>
+          <div id="booking-content">
+            <p>Select a day and time below.</p>
+
+            <!-- Date and Time -->
+            <div class="narrow-content">
+
+              <div class="date-time">
+                  <div class="selection">
+                      <h3>Day</h3>
+                      <ul id="js-date">
+                        <!-- Populated by JS -->
+                      </ul>
+                  </div>
+
+                  <div class="selection">
+                      <h3>Time</h3>
+                      <p id="select-a-date"><em>Please select a day</em></p>
+                      <ul id="js-time" class="hide">
+                        <!-- Populated by JS -->
+                      </ul>
+                  </div>
+              </div>
+
+              <!-- Booking Info -->
+              <div class="booking-form hide" id="booking-info">
+                  <h3>Booking Info</h3>
+                  <form>
+                    <label for="name" class="text-right">
+                      <span>Name</span>
+                      <span id="name-error" class="error hide">Please enter a name</span>
+                    </label>
+                    <input type="text" id="name">
+
+                    <label for="email" class="text-right">
+                      <span>Email</span>
+                      <span id="email-error"  class="error hide">Please enter an email address</span>
+                    </label>
+                    <input type="email" id="email">
+
+                    <label for="phone" class="text-right">
+                      <span>Phone</span>
+                      <span id="phone-error"  class="error hide">Please enter a phone number</span>
+                    </label>
+                    <input type="tel" id="phone">
+
+                    <label for="party-size" class="text-right">
+                      <span>Party Size <em>(We recommend 4-6 people)</em></span>
+                      <span id="party-size-error"  class="error hide">Please enter a party size between 2-8</span>
+                    </label>
+                    <input type="tel" id="party-size">
+
+                  </form>
+               </div>
+            </div>
+
+            <div class="cta hide">
+              <a class="button hollow hide" id="book" onclick="handleBook()"><span>Book Now</span></a>
+            </div>
+
           </div>
 
         </div>

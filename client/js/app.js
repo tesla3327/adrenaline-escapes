@@ -68,6 +68,22 @@ function getBookings(cb) {
 	req.send();
 }
 
+/**
+ * Post data to server
+ */
+function makeBooking(data, cb) {
+	var req = new XMLHttpRequest();
+
+	req.onload = function() {
+		cb(this);
+	};
+
+	req.open('POST', SERVER + 'booking');
+	req.setRequestHeader('Content-Type', 'application/json');
+
+	req.send(JSON.stringify(data));
+}
+
 function getValueOfInput(id) {
 	return document.getElementById(id).value;
 }
@@ -84,33 +100,27 @@ function getBookingInfo() {
 	};
 }
 
-var partySizeMalformed = 'Party size must be a number between 2-8';
 function validatePartySize(partySize) {
-	var result = '';
+	var valid = true;
 
 	if (partySize === '') {
-		result = 'Please enter a party size between 2-8';
+		valid = false;
 	} else {
-		console.log('hello');
 		try {
 			var num = parseInt(partySize, 10);
 
-			console.log(num);
-
 			if (isNaN(num)) {
-				console.log('error 1');
-				result = partySizeMalformed;
+				valid = false;
 			} else if (num > 8 || num < 2) {
-				result = partySizeMalformed;
+				valid = false;
 			}
 		} catch (e) {
-			console.log('error 2');
-			result = partySizeMalformed;
+			valid = false;
 			console.error(e);
 		}
 	}
 
-	return result;
+	return valid;
 }
 
 /**
@@ -118,9 +128,9 @@ function validatePartySize(partySize) {
  */
 function validateBookingInfo(info) {
 	return {
-		name: info.name !== '' ? '' : 'Please enter a name',
-		email: info.email !== '' ? '' : 'Please enter an email',
-		phone: info.phone !== '' ? '' : 'Please enter a phone number',
+		name: info.name !== '',
+		email: info.email !== '',
+		phone: info.phone !== '',
 		partySize: validatePartySize(info.partySize),
 	}
 }
@@ -194,6 +204,16 @@ function handleDateClick(dateObj) {
 		// Select new state
 		dateObj.selected = true;
 
+		// Deselect the time
+		var selectedTime = getSelectedTime(state);
+		if (selectedTime) {
+			selectedTime.selected = false;
+		}
+
+		// Also hide the booking stuff
+		hide('booking-info');
+		hide('book');
+
 		// We want to do the sliding animation
 		state.slideAnimation = true;
 
@@ -209,7 +229,9 @@ function handleTimeClick(timeObj) {
 	// Deselect currently selected
 	var curr = getSelectedTime(state);
 
+	// We hide these until they can actually make the booking
 	show('booking-info');
+	show('book');
 
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
@@ -225,8 +247,92 @@ function handleTimeClick(timeObj) {
  * Make the booking!
  */
 function handleBook() {
-	console.log(getBookingInfo());
-	console.log(validateBookingInfo(getBookingInfo()));
+	// Get booking info
+	var info = getBookingInfo();
+
+	// Validate it
+	var validation = validateBookingInfo(info);
+	updateValidation(validation);
+
+	// Check if we are valid and good to go!
+	var good2go = Object.keys(validation).every(function(k) {
+		return validation[k];
+	});
+
+	if (good2go) {
+		// We need to put together the booking to send to the server
+		info.date = getSelectedDate(state).date;
+		info.time = getSelectedTime(state).time;
+
+		makeBooking(info, function(response) {
+			if (response.status >= 200 && response.status < 300) {
+				bookingSuccess(info);
+			} else if (response.status >= 500) {
+				console.error(response);
+				bookingFailure();
+			} else if (response.status === 404) {
+				bookingTaken();
+			}
+		});
+	}
+}
+
+/**
+ * If the booking completes successfully
+ */
+function bookingSuccess(info) {
+	// Populate success fields
+	document.getElementById('success-date').innerText = info.date;
+	document.getElementById('success-time').innerText = info.time;
+
+	hide('booking-content');
+	show('booking-success');	
+
+	// Scroll to show
+	location = '#booking';
+}
+
+/**
+ * If the booking runs into some error
+ */
+function bookingFailure() {
+	
+}
+
+/**
+ * If the booking is already taken
+ */
+function bookingTaken() {
+	
+}
+
+/**
+ * Update the form with the validation
+ */
+function updateValidation(v) {
+	if (v.name) {
+		hide('name-error');
+	} else {
+		show('name-error');
+	}
+
+	if (v.email) {
+		hide('email-error');
+	} else {
+		show('email-error');
+	}
+
+	if (v.phone) {
+		hide('phone-error');
+	} else {
+		show('phone-error');
+	}
+
+	if (v.partySize) {
+		hide('party-size-error');
+	} else {
+		show('party-size-error');
+	}
 }
 
 /**

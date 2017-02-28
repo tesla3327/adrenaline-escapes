@@ -131,8 +131,6 @@ const scrubPersonalData = e => {
  * Groups the bookings list by date
  */
 const groupByDate = bookings => {
-  console.log(bookings);
-
   const grouped = bookings.reduce( (prev, next) => {
     // console.log('Prev:', prev);
     // console.log('Next:', next);

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300i,400,500,700i');
+@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300,300i,400,400i,500,500i,700i');
 
 body, html {
 	height: 100%;
@@ -150,11 +150,15 @@ button:focus {
 	color: #88a419;
 }
 
-form label {
+form label span {
 	font-size: 0.9em;
 	line-height: 1.5em;
 	font-weight: 400;
 	display: block;
+}
+
+form label span.error {
+	color: hsla(10, 75%, 50%, 1);
 }
 
 form input:focus,
@@ -195,7 +199,7 @@ form .select {
 	padding-left: 0.6em;
 }
 
-.hide {
+body .hide {
 	display: none;
 }
 
