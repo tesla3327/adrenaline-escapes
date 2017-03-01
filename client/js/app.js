@@ -4,7 +4,8 @@ var state = {
 
 // These transitions are added without any delay
 var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
-var SERVER = 'http://127.0.0.1:3000/';
+var SERVER = 'https://adrenaline-escapes.herokuapp.com/';
+// var SERVER = 'http://localhost:3000/';
 
 /**
  * Fetch bookings
@@ -32,10 +33,7 @@ function makeBooking(data, cb) {
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
-		var that = this;
-		setTimeout(function() {
-			cb(that);	
-		}, 2000);
+		cb(this);	
 	};
 
 	req.ontimeout = function() {
@@ -333,7 +331,8 @@ var dateOptions = {
 	weekday: 'long',
 	year: 'numeric',
 	month: 'long',
-	day: 'numeric'
+	day: 'numeric',
+	timeZone: 'UTC',
 };
 function renderDateString(date) {
 	return date.toLocaleString('en-US', dateOptions);
