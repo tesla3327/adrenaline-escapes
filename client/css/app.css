@@ -141,14 +141,43 @@ a.button.hollow span {
 	display: inline-block;
 }
 
-a.button:hover,
-a.button:active
-a.button:focus,
-button:hover,
-button:active,
-button:focus {
-	color: #88a419;
+a.button.hollow.loading {
+	background: #b2d235;
+	// padding-left: 4em;
+	padding-right: 3em;	
 }
+
+a.button.hollow.loading span {
+	color: rgb(50,50,50);
+	position: relative;
+}
+
+a.button.hollow.loading span::after {
+	content: '';
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	margin: 0 15px;
+	border: 2px solid rgb(50,50,50);
+	border-radius: 8px;
+	border-right-color: transparent;
+	transform: translateY(4px);
+	animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+	from { transform: translateY(4px) rotate(0); }
+	to { transform: translateY(4px) rotate(360deg); }
+}
+
+// a.button:hover,
+// a.button:active
+// a.button:focus,
+// button:hover,
+// button:active,
+// button:focus {
+// 	color: #88a419;
+// }
 
 form label span {
 	font-size: 0.9em;
@@ -229,6 +258,34 @@ table tr:nth-child(even) td {
 	padding-bottom: 3px;
 }
 
+.arrow {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #f1f1f1;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg);
+  margin-top: 5em;
+  animation: bounce 0.5s ease alternate infinite;
+}
+
+.arrow-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* flex-grow: 1; */
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(10px) rotate(-45deg);
+  },
+  100% {
+    transform: translateY(0px) rotate(-45deg);
+  }
+}
+
 /**
  * ------ Hero -------
  */
@@ -236,8 +293,11 @@ table tr:nth-child(even) td {
 	height: 500px;
 	display: flex;
 	justify-content: center;
-  	background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
+	flex-direction: column;
+	align-items: center;
+	background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
 	background-repeat: no-repeat;
+	padding-bottom: 2em;
 }
 
 #hero .content {
@@ -245,6 +305,7 @@ table tr:nth-child(even) td {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	margin-top: 5em;
 }
 
 #hero #logo {
@@ -296,7 +357,7 @@ table tr:nth-child(even) td {
 	margin-bottom: 1em;
 }
 
-#select-a-date {
+#select-a-date, #call-for-bookings {
 	text-align: left;
 }
 
@@ -518,12 +579,30 @@ footer p {
 	// 	animation: appear 1s cubic-bezier(0.4, 0, 1, 1) 0.6s;
 	// }
 
+	.arrow-container {
+		margin-top: 0em;
+	}
+
+	#hero .content {
+		margin-top: 0em;
+	}
+
 	#booking li:not(.booked) {
 		cursor: pointer;
 	}
 
 	#booking li:not(.booked):hover {
 		background: rgb(90,90,90);
+	}
+
+	#booking-content {
+		display: flex; 
+		flex-direction: column; 
+		align-items: center; 
+	}
+
+	#booking-content.hide {
+		display: none;
 	}
 }
 

@@ -7,54 +7,6 @@ var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
 var SERVER = 'http://127.0.0.1:3000/';
 
 /**
- * Stub out some data
- */
-// function getBookings() {
-// 	return {
-// 		'March 3, 2017': {
-// 			date: 'March 3, 2017',
-// 			times: [
-// 				{ date: 'March 3, 2017', time: '5:00 PM', booked: true },
-// 				{ date: 'March 3, 2017', time: '6:30 PM', booked: true },
-// 				{ date: 'March 3, 2017', time: '8:00 PM', booked: true },
-// 				{ date: 'March 3, 2017', time: '9:30 PM', booked: true },
-// 			],
-// 		},
-// 		'March 4, 2017': {
-// 			date: 'March 4, 2017',
-// 			times: [
-// 				{ date: 'March 4, 2017', time: '2:00 PM', booked: false },
-// 				{ date: 'March 4, 2017', time: '3:30 PM', booked: true },
-// 				{ date: 'March 4, 2017', time: '5:00 PM', booked: true },
-// 				{ date: 'March 4, 2017', time: '6:30 PM', booked: false },
-// 				{ date: 'March 4, 2017', time: '8:00 PM', booked: false },
-// 				{ date: 'March 4, 2017', time: '9:30 PM', booked: true },
-// 			],
-// 		},
-// 		'March 10, 2017': {
-// 			date: 'March 10, 2017',
-// 			times: [
-// 				{ date: 'March 10, 2017', time: '5:00 PM', booked: false },
-// 				{ date: 'March 10, 2017', time: '6:30 PM', booked: false },
-// 				{ date: 'March 10, 2017', time: '8:00 PM', booked: false },
-// 				{ date: 'March 10, 2017', time: '9:30 PM', booked: false },
-// 			],
-// 		},
-// 		'March 11, 2017': {
-// 			date: 'March 11, 2017',
-// 			times: [
-// 				{ date: 'March 11, 2017', time: '2:00 PM', booked: false },
-// 				{ date: 'March 11, 2017', time: '3:30 PM', booked: false },
-// 				{ date: 'March 11, 2017', time: '5:00 PM', booked: false },
-// 				{ date: 'March 11, 2017', time: '6:30 PM', booked: false },
-// 				{ date: 'March 11, 2017', time: '8:00 PM', booked: false },
-// 				{ date: 'March 11, 2017', time: '9:30 PM', booked: false },
-// 			],
-// 		},
-// 	};
-// }
-
-/**
  * Fetch bookings
  */
 function getBookings(cb) {
@@ -64,6 +16,11 @@ function getBookings(cb) {
 		cb( JSON.parse(this.responseText) );
 	};
 
+	req.ontimeout = function() {
+		bookingFailure();
+	};
+
+	req.timeout = 6000;
 	req.open('GET', SERVER + 'bookings');
 	req.send();
 }
@@ -75,9 +32,17 @@ function makeBooking(data, cb) {
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
-		cb(this);
+		var that = this;
+		setTimeout(function() {
+			cb(that);	
+		}, 2000);
 	};
 
+	req.ontimeout = function() {
+		bookingFailure();
+	};
+
+	req.timeout = 6000;
 	req.open('POST', SERVER + 'booking');
 	req.setRequestHeader('Content-Type', 'application/json');
 
@@ -264,14 +229,17 @@ function handleBook() {
 		info.date = getSelectedDate(state).date;
 		info.time = getSelectedTime(state).time;
 
+		// Make button spin
+		document.getElementById('book').classList.add('loading');
+		
 		makeBooking(info, function(response) {
 			if (response.status >= 200 && response.status < 300) {
 				bookingSuccess(info);
-			} else if (response.status >= 500) {
-				console.error(response);
-				bookingFailure();
 			} else if (response.status === 404) {
 				bookingTaken();
+			} else {
+				console.error(response);
+				bookingFailure();
 			}
 		});
 	}
@@ -282,7 +250,8 @@ function handleBook() {
  */
 function bookingSuccess(info) {
 	// Populate success fields
-	document.getElementById('success-date').innerText = info.date;
+	var date = new Date(info.date);
+	document.getElementById('success-date').innerText = renderDateString(date);
 	document.getElementById('success-time').innerText = info.time;
 
 	hide('booking-content');
@@ -296,14 +265,26 @@ function bookingSuccess(info) {
  * If the booking runs into some error
  */
 function bookingFailure() {
-	
+	console.log('Booking failed!');
+	hide('booking-content');
+	document.getElementById('book').classList.remove('loading');
+	show('booking-failure');
+
+	// Scroll to show
+	location = '#booking';
 }
 
 /**
  * If the booking is already taken
  */
 function bookingTaken() {
-	
+	console.log('Booking is taken');
+	hide('booking-content');
+	document.getElementById('book').classList.remove('loading');
+	show('booking-taken');
+
+	// Scroll to show
+	location = '#booking';
 }
 
 /**
@@ -346,6 +327,19 @@ function addListTransition(li, offset) {
 }
 
 /**
+ * Takes a date and returns the string
+ */
+var dateOptions = {
+	weekday: 'long',
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric'
+};
+function renderDateString(date) {
+	return date.toLocaleString('en-US', dateOptions);
+}
+
+/**
  * Render all of the dates to the page
  */
 function renderDates(state) {
@@ -357,7 +351,7 @@ function renderDates(state) {
 
 	dates.forEach( function(date, i) {
 		var li = document.createElement('li');
-		li.innerText = date;
+		li.innerText = renderDateString(new Date(state.bookings[date].date));
 
 		// Add style
 		addListTransition(li, i);
@@ -409,26 +403,36 @@ function renderTimes(state) {
 		show('js-time');
 		hide('select-a-date');
 
-		// Render all of the times
-		selectedDate.times.forEach(function(time, i) {
-			var li = document.createElement('li');
-			li.innerText = time.time;
+		// We must first check to see if this is for today
+		var date = new Date(selectedDate.date);
+		var today = new Date(Date.now());
 
-			addListTransition(li, i);
+		if (date.toLocaleDateString() === today.toLocaleDateString()) {
+			show('call-for-bookings');
+		} else {
+			hide('call-for-bookings');
 
-			if (time.selected) {
-				li.classList.add('selected');
-			}
+			// Render all of the times
+			selectedDate.times.forEach(function(time, i) {
+				var li = document.createElement('li');
+				li.innerText = time.time;
 
-			// If we are booked we don't need a click handler
-			if (time.booked) {
-				li.classList.add('booked');
-			} else {
-				li.onclick = handleTimeClick.bind(null, time);
-			}
+				addListTransition(li, i);
 
-			elem.appendChild(li);
-		});
+				if (time.selected) {
+					li.classList.add('selected');
+				}
+
+				// If we are booked we don't need a click handler
+				if (time.booked) {
+					li.classList.add('booked');
+				} else {
+					li.onclick = handleTimeClick.bind(null, time);
+				}
+
+				elem.appendChild(li);
+			});
+		}
 
 		// The transition will not work without being "async"
 		setTimeout(function() {

@@ -22,6 +22,9 @@
         <a href="#booking" class="button hollow"><span>Book Now</span></a>
 
       </div>
+      <div class="arrow-container">
+        <div class="arrow"></div>
+      </div>
     </section>
 
     <!-- About -->
@@ -73,7 +76,9 @@
             <h2>Pricing</h2>
           </div>
           <p>
-            <strong>$20</strong> per person, or <strong>$100</strong> minimum booking.
+            <strong>$20</strong> per person, or <strong>$100</strong> minimum booking, taxes included.
+            <br />
+            We recommend 4-6 people for the best experience.
           </p>
 
           <table>
@@ -128,10 +133,21 @@
             <p>You have successfully booked an escape at <strong><em>Adrenaline Escapes!</em></strong></p>
             <p><strong>Date:</strong> <span id="success-date"></span></p>
             <p><strong>Time:</strong> <span id="success-time"></span></p>
+
+            <p>Check out our <a href="https://www.facebook.com/AdrenalineMB/">Facebook page</a> if you haven't already!</p>
+          </div>
+
+          <div id="booking-taken" class="hide">
+            <p>Sorry, this time slot has already been booked. Please refresh the page and select another time.</p>
+          </div>
+
+          <div id="booking-failure" class="hide">
+            <p>Some weird error happened! Try refreshing the page and trying again!</p>
           </div>
 
           <div id="booking-content">
             <p>Select a day and time below.</p>
+            <p>For corporate bookings, or if you don't see a time that works for you, please call us.</p>
 
             <!-- Date and Time -->
             <div class="narrow-content">
@@ -147,6 +163,7 @@
                   <div class="selection">
                       <h3>Time</h3>
                       <p id="select-a-date"><em>Please select a day</em></p>
+                      <p id="call-for-bookings" class="hide"><em>Please call for bookings today</em></p>
                       <ul id="js-time" class="hide">
                         <!-- Populated by JS -->
                       </ul>
@@ -206,13 +223,13 @@
         <div>
           <p>
             <strong>Phone:</strong>
-            <span>(204) 326-2934</span>
+            <span>(204) 380-4799</span>
           </p>
         </div>
         <div>
           <p>
             <strong>Email:</strong>
-            <span><a href="mailto:contact@adrenalineescapes.com">contact@adrenalineescapes.com</a></span>
+            <span><a href="mailto:info@adrenalineescapes.com">info@adrenalineescapes.com</a></span>
           </p>
         </div>
 

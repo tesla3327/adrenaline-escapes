@@ -91,7 +91,8 @@ const getAllBookings = () => {
     // Map each to an object
     const bookings = values.map( (e, i) => {
       return {
-        date: e[0],
+        date: Date.parse(e[0]),
+        dateString: e[0],
         time: e[1],
         name: e[2],
         email: e[3],
@@ -122,6 +123,7 @@ const bookingIsAvailable = e => {
 const scrubPersonalData = e => {
   return {
     date: e.date,
+    dateString: e.dateString,
     time: e.time,
     booked: e.booked !== undefined ? e.booked : !bookingIsAvailable(e),
   };
@@ -138,6 +140,7 @@ const groupByDate = bookings => {
     if (!prev[next.date] || !prev[next.date].times) {
       prev[next.date] = {
         date: next.date,
+        dateString: next.dateString,
         times: [],
       };
     }
