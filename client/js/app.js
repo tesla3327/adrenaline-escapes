@@ -456,12 +456,40 @@ function render(state) {
 }
 
 /**
+ * Add the google maps page only once the page has finished loading
+ */
+var smallMaps = '<iframe width="700" height="400" frameborder="0" style="border:0; width:100%" src="https://www.google.com/maps/embed/v1/place?q=Adrenaline%20Escapes&zoom=14&key=AIzaSyAQN8hhRYLzI4fZ5F1Z3QAf7bzmz6DKn6I"></iframe>';
+var largeMaps = '<iframe width="1200" height="500" frameborder="0" style="border:0; width:100%" src="https://www.google.com/maps/embed/v1/place?q=Adrenaline%20Escapes&zoom=15&key=AIzaSyAQN8hhRYLzI4fZ5F1Z3QAf7bzmz6DKn6I"></iframe>';
+function loadGoogleMaps() {
+	var width = window.innerWidth;
+
+	var elem = document.createElement('div');
+	elem.classList.add('google-map');
+
+	// Small or large maps?
+	if (width < 700) {
+		elem.classList.add('small');
+		elem.innerHTML = smallMaps;
+	} else {
+		elem.classList.add('large');
+		elem.innerHTML = largeMaps;
+	}
+
+	var parent = document.getElementById('footer');
+	var toReplace = document.getElementById('maps-placeholder');
+	parent.replaceChild(elem, toReplace);
+};	
+
+/**
  * Entry point for the page
  */
 function init() {
 	getBookings(function(bookings) {
 		state.bookings = bookings;
 		render(state);
+
+		// Only now do we get our maps
+		loadGoogleMaps();
 	});
 }
 

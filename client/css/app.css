@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Kanit:500i,600i,700i,800i,900i|Roboto:300,300i,400,400i,500,500i,700i');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,500,500i,700i');
 
 body, html {
 	height: 100%;
@@ -450,6 +450,10 @@ footer p {
 
 	#hero {
 		height: 700px;
+	}
+
+	#hero p {
+		font-size: 24px;
 	}
 
 	#hero #logo {
