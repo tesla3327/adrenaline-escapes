@@ -14,8 +14,6 @@ sheets.initialize().then(() => {
 // Define constants
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static('./public'))
-
 // CORS support
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
