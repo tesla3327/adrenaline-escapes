@@ -6,7 +6,8 @@ var google = require('googleapis');
 
 let sheets;
 
-const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
+const CLIENT_SECRET = require('./client_secret.js');
+const SPREADSHEET_ID = require('./spreadsheet.js');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
@@ -78,7 +79,7 @@ const updateValuesInSheet = (params, data) => {
 const getAllBookings = () => {
   return getValuesFromSheet(
     {
-      spreadsheetId: '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI',
+      spreadsheetId: SPREADSHEET_ID,
       range: 'Bookings',
     }
   )
@@ -176,7 +177,7 @@ const makeBooking = booking => {
       return updateValuesInSheet(
         {
           valueInputOption: 'USER_ENTERED',
-          spreadsheetId: '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI',
+          spreadsheetId: SPREADSHEET_ID,
           range: `Bookings!A${ index + 2 }:F${ index + 2 }`,
           includeValuesInResponse: true,  
           resource: {

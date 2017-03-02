@@ -1,5 +1,7 @@
 node_modules
 client_secret.json
+spreadsheet.js
+client_secret.js
 credentials
 .DS_*
 ._*
