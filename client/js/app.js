@@ -406,7 +406,7 @@ function renderTimes(state) {
 		var date = new Date(selectedDate.date);
 		var today = new Date(Date.now());
 
-		if (date.toLocaleDateString() === today.toLocaleDateString()) {
+		if (renderDateString(date) === renderDateString(today)) {
 			show('call-for-bookings');
 		} else {
 			hide('call-for-bookings');
