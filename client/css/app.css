@@ -439,11 +439,27 @@ footer p {
 	}
 }
 
+.show-mobile {
+	display: inline;
+}
+
+.show-desktop {
+	display: none;
+}
+
 /**
  * ------ Breakpoints ------
  */
 
 @media (min-width: 700px) {
+	.show-mobile {
+		display: none;
+	}
+
+	.show-desktop {
+		display: inline;
+	}
+
 	body {
 	    -webkit-text-size-adjust: none;
 	}

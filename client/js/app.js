@@ -4,8 +4,8 @@ var state = {
 
 // These transitions are added without any delay
 var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
-var SERVER = 'https://adrenaline-escapes.herokuapp.com/';
-// var SERVER = 'http://localhost:3000/';
+// var SERVER = 'https://adrenaline-escapes.herokuapp.com/';
+var SERVER = 'http://localhost:3000/';
 
 /**
  * Fetch bookings

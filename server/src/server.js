@@ -31,7 +31,16 @@ app.get('/bookings', (req, res) => {
 	// We want all the bookings, but to make sure that no personal data is sent
 	sheets.getAllBookings()
 		.then( bookings => {
-			const data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
+			// Remove any personally identifiable information
+			const scrubbed = bookings.map( sheets.scrubPersonalData );
+
+			// Remove any bookings that are in the past
+			const today = Date.now();
+			const filtered = scrubbed.filter( e => e.date >= today );
+
+			// Group them by date so they are easier to work with
+			const data = sheets.groupByDate( filtered );
+
 			res.send(data);
 		});
 });

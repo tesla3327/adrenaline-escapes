@@ -89,7 +89,6 @@ const getAllBookings = () => {
     values.shift();
 
     // Map each to an object
-    const today = Date.now();
     const bookings = values.map( (e, i) => {
       return {
         date: Date.parse(e[0]),
@@ -100,8 +99,6 @@ const getAllBookings = () => {
         partySize: e[4],
       }
     })
-    // We don't care about previous dates
-    .filter( e => e.date >= today )
     .filter( e => e.date !== undefined && e.time !== undefined )
     // Add whether or not the time slot has been booked
     .map( e => {
