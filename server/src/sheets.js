@@ -96,7 +96,8 @@ const getAllBookings = () => {
         time: e[1],
         name: e[2],
         email: e[3],
-        partySize: e[4],
+        phone: e[4],
+        partySize: e[5],
       }
     })
     .filter( e => e.date !== undefined && e.time !== undefined )
@@ -176,11 +177,11 @@ const makeBooking = booking => {
         {
           valueInputOption: 'USER_ENTERED',
           spreadsheetId: '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI',
-          range: `Bookings!A${ index + 2 }:E${ index + 2 }`,
+          range: `Bookings!A${ index + 2 }:F${ index + 2 }`,
           includeValuesInResponse: true,  
           resource: {
             values: [ 
-              [null, null, booking.name, booking.email, booking.partySize],
+              [null, null, booking.name, booking.email, booking.phone, booking.partySize],
             ],
           }
         }
