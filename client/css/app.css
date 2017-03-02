@@ -493,6 +493,7 @@ footer p {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		max-width: 100%;
 	}
 
 	a.button.hollow {
