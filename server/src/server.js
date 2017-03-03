@@ -35,8 +35,16 @@ app.get('/bookings', (req, res) => {
 			const scrubbed = bookings.map( sheets.scrubPersonalData );
 
 			// Remove any bookings that are in the past
-			const today = Date.now();
-			const filtered = scrubbed.filter( e => e.date >= today );
+			const today = new Date(Date.now());
+
+			// Convert to epoch and adjust for timezone
+			// Timezone offset is in minutes
+			let todayEpoch = today.valueOf() - (today.getTimezoneOffset() * 60 * 1000);
+
+			// Remove seconds and milliseconds, because we only have the year, month day
+			// in the date from the spreadsheet
+			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
+			const filtered = scrubbed.filter( e => e.date >= todayEpoch );
 
 			// Group them by date so they are easier to work with
 			const data = sheets.groupByDate( filtered );

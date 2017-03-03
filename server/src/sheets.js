@@ -9,6 +9,13 @@ let sheets;
 const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
 const SPREADSHEET_ID = '1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
 
+const DATE_COL = 0;
+const TIME_COL = 1;
+const NAME_COL = 2;
+const EMAIL_COL = 3;
+const PHONE_COL = 4;
+const PARTY_SIZE_COL = 5;
+
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -91,14 +98,16 @@ const getAllBookings = () => {
 
     // Map each to an object
     const bookings = values.map( (e, i) => {
+      const date = new Date(Date.parse(e[DATE_COL]));
+
       return {
-        date: Date.parse(e[0]),
-        dateString: e[0],
-        time: e[1],
-        name: e[2],
-        email: e[3],
-        phone: e[4],
-        partySize: e[5],
+        date: date.valueOf() - (date.getTimezoneOffset() * 60 * 1000),
+        dateString: e[DATE_COL],
+        time: e[TIME_COL],
+        name: e[NAME_COL],
+        email: e[EMAIL_COL],
+        phone: e[PHONE_COL],
+        partySize: e[PARTY_SIZE_COL],
       }
     })
     .filter( e => e.date !== undefined && e.time !== undefined )
