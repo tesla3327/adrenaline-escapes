@@ -339,6 +339,40 @@ function renderDateString(date) {
 }
 
 /**
+ * Compares a UTC date to today (local-time), determining if the date is:
+ * in the past: -1
+ * today: 0
+ * in the future: 1
+ */
+function getDateRelativeToToday(date) {
+	var today = new Date(Date.now());
+
+	// Compare year
+	var year = date.getUTCFullYear() - today.getFullYear();
+
+	// Compare month
+	var month = date.getUTCMonth() - today.getMonth();
+
+	// Compare day of the month
+	var day = date.getUTCDate() - today.getDate();
+
+	var relative = 0;
+	if (year < 0 || (year === 0 && month < 0) || (year === 0 && month === 0 && day < 0)) {
+		relative = -1;
+	} else if (year > 0 || (year === 0 && month > 0) || (year === 0 && month === 0 && day > 0)) {
+		relative = 1;
+	}
+
+	// Return an object with all comparisons
+	return {
+		year: year,
+		month: month,
+		day: day,
+		relative: relative
+	};
+}
+
+/**
  * Render all of the dates to the page
  */
 function renderDates(state) {
@@ -348,24 +382,34 @@ function renderDates(state) {
 	// Get all of the dates we have
 	var dates = Object.keys(state.bookings);
 
-	dates.forEach( function(date, i) {
+	dates.forEach( function(dateId, i) {
+		var dateObj = state.bookings[dateId];
+
+		// Check where this date is relative to today
+		var dateRelative = getDateRelativeToToday(new Date(dateObj.date));
+
+		// If it's in the past we don't want to render it at all
+		if (dateRelative.relative < 0) {
+			return;
+		}
+
 		var li = document.createElement('li');
-		li.innerText = renderDateString(new Date(state.bookings[date].date));
+		li.innerText = renderDateString(new Date(dateObj.date));
 
 		// Add style
 		addListTransition(li, i);
 
 		// Selected
-		if (state.bookings[date].selected) {
+		if (dateObj.selected) {
 			li.classList.add('selected');
 		}
 
 		// Booked
-		if (isDateFullyBooked(state.bookings[date])) {
+		if (isDateFullyBooked(dateObj)) {
 			li.classList.add('booked');
 		} else {
 			// Add click handler only if we can actually book it
-			li.onclick = handleDateClick.bind(null, state.bookings[date]);
+			li.onclick = handleDateClick.bind(null, dateObj);
 		}
 
 		elem.appendChild(li);
@@ -402,11 +446,9 @@ function renderTimes(state) {
 		show('js-time');
 		hide('select-a-date');
 
-		// We must first check to see if this is for today
-		var date = new Date(selectedDate.date);
-		var today = new Date(Date.now());
-
-		if (renderDateString(date) === renderDateString(today)) {
+		// Compare the selected date to today
+		var dateRelative = getDateRelativeToToday(new Date(selectedDate.date));
+		if (dateRelative.relative === 0) {
 			show('call-for-bookings');
 		} else {
 			hide('call-for-bookings');
