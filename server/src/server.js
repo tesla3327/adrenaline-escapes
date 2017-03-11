@@ -44,10 +44,14 @@ app.get('/bookings', (req, res) => {
 			// Remove seconds and milliseconds, because we only have the year, month day
 			// in the date from the spreadsheet
 			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
-			const filtered = scrubbed.filter( e => e.date >= todayEpoch );
+
+			// Go back one day to allow timezones behind UTC to have "today"
+			var yesterdayEpoch = todayEpoch - (86400 * 1000);
+
+			const filtered = scrubbed.filter( e => e.date >= yesterdayEpoch );
 
 			// Group them by date so they are easier to work with
-			const data = sheets.groupByDate( filtered );
+			const data = sheets.groupByDate( scrubbed );
 
 			res.send(data);
 		});
