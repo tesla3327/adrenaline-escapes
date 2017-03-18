@@ -286,6 +286,19 @@ table tr:nth-child(even) td {
   }
 }
 
+.social-media-icon {
+	width: 40px;
+	height: 40px;
+	padding: 10px;
+}
+
+.social-media-icon-list {
+	padding-top: 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
 /**
  * ------ Hero -------
  */
