@@ -4,8 +4,9 @@ var state = {
 
 // These transitions are added without any delay
 var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
-var SERVER = 'https://adrenaline-escapes.herokuapp.com/';
-// var SERVER = 'http://localhost:3000/';
+var SERVER = location.protocol === 'file:'
+	? 'http://localhost:3000/'
+	: 'https://adrenaline-escapes.herokuapp.com/';
 
 /**
  * Fetch bookings
@@ -449,9 +450,9 @@ function renderTimes(state) {
 		// Compare the selected date to today
 		var dateRelative = getDateRelativeToToday(new Date(selectedDate.date));
 		if (dateRelative.relative === 0) {
-			show('call-for-bookings');
+			show('custom-bookings');
 		} else {
-			hide('call-for-bookings');
+			hide('custom-bookings');
 
 			// Render all of the times
 			selectedDate.times.forEach(function(time, i) {

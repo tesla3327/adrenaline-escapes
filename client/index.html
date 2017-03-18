@@ -125,6 +125,7 @@
             <h2>Book your escape!</h2>
           </div>
 
+          <!-- Booking Success -->
           <div id="booking-success" class="hide">
             <!-- <h3>Awesome!</h3> -->
             <p>You have successfully booked an escape at <strong><em>Adrenaline Escapes!</em></strong></p>
@@ -134,10 +135,12 @@
             <p>Check out our <a href="https://www.facebook.com/AdrenalineMB/">Facebook page</a> if you haven't already!</p>
           </div>
 
+          <!-- Booking Taken -->
           <div id="booking-taken" class="hide">
             <p>Sorry, this time slot has already been booked. Please refresh the page and select another time.</p>
           </div>
 
+          <!-- Booking Failure -->
           <div id="booking-failure" class="hide">
             <p>Some weird error happened! Try refreshing the page and trying again!</p>
           </div>
@@ -163,8 +166,13 @@
 
                   <div class="selection">
                       <h3>Time</h3>
+
+                      <!-- Select a day -->
                       <p id="select-a-date"><em>Please select a day</em></p>
-                      <p id="call-for-bookings" class="hide"><em>Please call for bookings today</em></p>
+
+                      <!-- Custom bookings -->
+                      <p id="custom-bookings" class="hide"><em>Please email us for bookings today: <span><a href="mailto:info@adrenalineescapes.com">info@adrenalineescapes.com</a></span></em></p>
+
                       <ul id="js-time" class="hide">
                         <!-- Populated by JS -->
                       </ul>
