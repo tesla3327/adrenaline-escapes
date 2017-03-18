@@ -370,7 +370,7 @@ table tr:nth-child(even) td {
 	margin-bottom: 1em;
 }
 
-#select-a-date, #call-for-bookings {
+#select-a-date, #custom-bookings {
 	text-align: left;
 }
 
