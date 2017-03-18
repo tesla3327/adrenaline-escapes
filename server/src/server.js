@@ -6,7 +6,9 @@ const sheets = require('./sheets');
 sheets.initialize().then(() => {
 	// sheets.getAllBookings()
 	// 	.then( bookings => {
-	// 		const data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
+	// 		let data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
+	// 		data = sheets.groupConsecutive(data);
+	// 		console.log(JSON.stringify(data, null, 2));
 	// 	});	
 });
 
@@ -46,12 +48,15 @@ app.get('/bookings', (req, res) => {
 			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
 
 			// Go back one day to allow timezones behind UTC to have "today"
-			var yesterdayEpoch = todayEpoch - (86400 * 1000);
+			var yesterdayEpoch = todayEpoch - sheets.MILLISECONDS_IN_DAY;
 
 			const filtered = scrubbed.filter( e => e.date >= yesterdayEpoch );
 
 			// Group them by date so they are easier to work with
-			const data = sheets.groupByDate( scrubbed );
+			let data = sheets.groupByDate( scrubbed );
+
+			// Group consecutive dates into date ranges
+			data = sheets.groupConsecutive(data)
 
 			res.send(data);
 		});

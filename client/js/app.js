@@ -448,7 +448,8 @@ function renderTimes(state) {
 		hide('select-a-date');
 
 		// Compare the selected date to today
-		var dateRelative = getDateRelativeToToday(new Date(selectedDate.date));
+		var selectedDateObj = new Date(selectedDate.date);
+		var dateRelative = getDateRelativeToToday(selectedDateObj);
 		if (dateRelative.relative === 0) {
 			show('custom-bookings');
 		} else {
@@ -457,7 +458,12 @@ function renderTimes(state) {
 			// Render all of the times
 			selectedDate.times.forEach(function(time, i) {
 				var li = document.createElement('li');
-				li.innerText = time.time;
+				li.innerHTML = '<strong>' + time.time + '</strong><span class="date">' + selectedDateObj.toLocaleString('en-US', {
+					weekday: 'long',
+					month: 'long',
+					day: 'numeric',
+					timeZone: 'UTC',	
+				}) + '</span>';
 
 				addListTransition(li, i);
 

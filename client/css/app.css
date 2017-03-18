@@ -397,6 +397,14 @@ table tr:nth-child(even) td {
 	transform: translateX(0);
 }
 
+#booking li span.date {
+	float: right;
+}
+
+#booking li.booked span.date {
+	text-decoration: line-through;
+}
+
 /**
  * ------ Contact ------
  */
