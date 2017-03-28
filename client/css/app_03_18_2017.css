@@ -383,6 +383,17 @@ table tr:nth-child(even) td {
 	transform: translateX(-10px);
 }
 
+#booking li span,
+#booking-info span.time {
+	font-weight: 500;
+	float: right;
+}
+
+#booking-info .booking-time-date {
+	margin: 1em 0;
+	color: #b2d235;
+}
+
 #booking li.selected {
 	color: #b2d235;
 }
@@ -395,6 +406,14 @@ table tr:nth-child(even) td {
 #booking ul.appendCompleted li {
 	opacity: 1;
 	transform: translateX(0);
+}
+
+.time-list h4 {
+	font-style: italic;
+	padding-bottom: 0;
+	margin: 1.5em 0 0.5em 0;
+	font-weight: 400;
+	color: #b2d235;
 }
 
 /**

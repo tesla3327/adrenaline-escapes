@@ -156,7 +156,7 @@
           </div>
 
           <div id="booking-content">
-            <p>Select a day and time below.</p>
+            <p>Select a weekend and time below.</p>
             <p>
               For corporate bookings, or if you don't see a time that works for you, please email us at: <span><a href="mailto:info@adrenalineescapes.com">info@adrenalineescapes.com</a></span>
             </p>
@@ -166,7 +166,7 @@
 
               <div class="date-time">
                   <div class="selection">
-                      <h3>Day</h3>
+                      <h3>Weekend</h3>
                       <ul id="js-date">
                         <!-- Populated by JS -->
                       </ul>
@@ -176,7 +176,7 @@
                       <h3>Time</h3>
 
                       <!-- Select a day -->
-                      <p id="select-a-date"><em>Please select a day</em></p>
+                      <p id="select-a-date"><em>Please select a weekend</em></p>
 
                       <!-- Custom bookings -->
                       <p id="custom-bookings" class="hide">
@@ -186,15 +186,20 @@
                         </em>
                       </p>
 
-                      <ul id="js-time" class="hide">
-                        <!-- Populated by JS -->
-                      </ul>
+                      <!-- <ul id="js-time" class="hide">
+                      </ul> -->
+
+                      <div id="js-time" class="hide time-list">
+                      </div>
                   </div>
               </div>
 
               <!-- Booking Info -->
               <div class="booking-form hide" id="booking-info">
                   <h3>Booking Info</h3>
+                  <div class="booking-time-date">
+                    <span class="booking-time" id="js-booking-date"></span><span class="time" id="js-booking-time"></span>
+                  </div>
                   <form>
                     <label for="name" class="text-right">
                       <span>Name</span>
