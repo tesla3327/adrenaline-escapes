@@ -180,14 +180,14 @@ const groupConsecutive = bookings => {
 
     if (lastRange && ((next - MILLISECONDS_IN_DAY) === parseInt(lastRange.endDate, 10))) {
       // Add to last range
-      lastRange.endDate = next;
+      lastRange.endDate = parseInt(next, 10);
       lastRange.dates.push( bookings[next] );
       // prev[prev.length - 1] = lastRange;
     } else {
       // Start new date range
       prev.push({
-        startDate: next,
-        endDate: next,
+        startDate: parseInt(next, 10),
+        endDate: parseInt(next, 10),
         dates: [ bookings[next] ],
       });
     }

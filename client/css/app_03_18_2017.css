@@ -416,6 +416,10 @@ table tr:nth-child(even) td {
 	color: #b2d235;
 }
 
+.time-list p {
+	text-align: left;
+}
+
 /**
  * ------ Contact ------
  */
@@ -575,7 +579,7 @@ footer p {
 	}
 
 	.narrow-content {
-		width: 20em;
+		width: 23em;
 	}
 
 	.google-map.small {
@@ -672,7 +676,7 @@ footer p {
 	}
 
 	.selection, .booking-form {
-		width: 20em;
+		width: 23em;
 	}
 
 	.selection + .selection {

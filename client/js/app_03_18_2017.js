@@ -15,7 +15,8 @@ function getBookings(cb) {
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
-		cb( JSON.parse(this.responseText) );
+		var data = JSON.parse(this.responseText);
+		cb( adjustGroupings(data) );
 	};
 
 	req.ontimeout = function() {
@@ -25,6 +26,59 @@ function getBookings(cb) {
 	req.timeout = 6000;
 	req.open('GET', SERVER + 'bookings');
 	req.send();
+}
+
+/**
+ * Fix ranges that may be in the past
+ */
+function adjustGroupings(groupings) {
+	// Add some comparison meta data
+	return groupings.map( function(grouping) {
+		return Object.assign(
+			{},
+			grouping,
+			{
+				startDateRelative: getDateRelativeToToday(new Date(grouping.startDate)),
+				endDateRelative: getDateRelativeToToday(new Date(grouping.endDate))
+			}
+		);
+	})
+	// Filter out ranges completely in the past
+	.filter( function(grouping) {
+		return grouping.endDateRelative.relative >= 0;
+	})
+	// Update ranges that start in the past to start today
+	.map( function(grouping) {
+		if (grouping.startDateRelative.relative < 0) {
+			var today = new Date(Date.now());
+
+			// Convert to epoch and adjust for timezone
+			// Timezone offset is in minutes
+			var todayEpoch = today.valueOf() - (today.getTimezoneOffset() * 60 * 1000);
+
+			// Remove seconds and milliseconds, because we only have the year, month day
+			// in the date from the spreadsheet
+			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
+
+			return Object.assign(
+				{},
+				grouping,
+				{ startDate: todayEpoch },
+				{ dates: removePastDates(grouping.dates) }
+			);
+		} else {
+			return grouping;
+		}
+	});
+}
+
+/**
+ * Remove past dates from a list of date objects
+ */
+function removePastDates(dates) {
+	return dates.filter(function(date) {
+		return getDateRelativeToToday(new Date(date.date)).relative >= 0;
+	});
 }
 
 /**
@@ -363,10 +417,10 @@ function renderGroupingString(grouping) {
 	var string = '';
 
 	if (grouping.startDate === grouping.endDate) {
-		string = renderDateString(new Date(parseInt(grouping.startDate, 10)));
+		string = renderDateString(new Date(grouping.startDate));
 	} else {
-		string = renderDateString(new Date(parseInt(grouping.startDate, 10))) +
-			' - ' + renderDateString(new Date(parseInt(grouping.endDate, 10)));
+		string = renderDateString(new Date(grouping.startDate)) +
+			' - ' + renderDateString(new Date(grouping.endDate));
 	}
 
 	return string;
@@ -491,15 +545,15 @@ function renderTimes(state) {
 function renderDate(elem, dateToRender, offset) {
 	// Compare the date to today
 	var dateRelative = getDateRelativeToToday(new Date(dateToRender.date));
+
+	// Create a list
+	var listElem = document.createElement('ul');
+	var dateString = renderDateString(new Date(parseInt(dateToRender.date, 10)));
+
 	if (dateRelative.relative === 0) {
-		show('custom-bookings');
+		listElem = document.createElement('p');
+		listElem.innerHTML = '<em>Please call us for bookings today at:<br><span class="show-mobile"><a href="tel:204-380-4799">(204) 380-4799</a></span><span class="show-desktop"><strong>(204) 380-4799</strong></span></em>';
 	} else {
-		hide('custom-bookings');
-
-		// Create a list
-		var listElem = document.createElement('ul');
-		var dateString = renderDateString(new Date(parseInt(dateToRender.date, 10)));
-
 		// Render all of the times
 		dateToRender.times.forEach(function(time, i) {
 			var li = document.createElement('li');
@@ -522,18 +576,18 @@ function renderDate(elem, dateToRender, offset) {
 
 			listElem.appendChild(li);
 		});
-
-		// Create a heading for the date
-		var headingElem = document.createElement('h4');
-		headingElem.innerText = dateString;
-		elem.appendChild(headingElem);
-		elem.appendChild(listElem);
-
-		// The transition will not work without being "async"
-		setTimeout(function() {
-			listElem.classList.add('appendCompleted');	
-		}, 0);
 	}
+
+	// Create a heading for the date
+	var headingElem = document.createElement('h4');
+	headingElem.innerText = dateString;
+	elem.appendChild(headingElem);
+	elem.appendChild(listElem);
+
+	// The transition will not work without being "async"
+	setTimeout(function() {
+		listElem.classList.add('appendCompleted');	
+	}, 0);
 }
 
 /**
