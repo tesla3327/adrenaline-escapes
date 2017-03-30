@@ -383,6 +383,17 @@ table tr:nth-child(even) td {
 	transform: translateX(-10px);
 }
 
+#booking li span,
+#booking-info span.time {
+	font-weight: 500;
+	float: right;
+}
+
+#booking-info .booking-time-date {
+	margin: 1em 0;
+	color: #b2d235;
+}
+
 #booking li.selected {
 	color: #b2d235;
 }
@@ -397,12 +408,16 @@ table tr:nth-child(even) td {
 	transform: translateX(0);
 }
 
-#booking li span.date {
-	float: right;
+.time-list h4 {
+	font-style: italic;
+	padding-bottom: 0;
+	margin: 1.5em 0 0.5em 0;
+	font-weight: 400;
+	color: #b2d235;
 }
 
-#booking li.booked span.date {
-	text-decoration: line-through;
+.time-list p {
+	text-align: left;
 }
 
 /**
@@ -564,7 +579,7 @@ footer p {
 	}
 
 	.narrow-content {
-		width: 20em;
+		width: 23em;
 	}
 
 	.google-map.small {
@@ -661,7 +676,7 @@ footer p {
 	}
 
 	.selection, .booking-form {
-		width: 20em;
+		width: 23em;
 	}
 
 	.selection + .selection {

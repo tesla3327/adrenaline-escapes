@@ -15,7 +15,8 @@ function getBookings(cb) {
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
-		cb( JSON.parse(this.responseText) );
+		var data = JSON.parse(this.responseText);
+		cb( adjustGroupings(data) );
 	};
 
 	req.ontimeout = function() {
@@ -28,9 +29,64 @@ function getBookings(cb) {
 }
 
 /**
+ * Fix ranges that may be in the past
+ */
+function adjustGroupings(groupings) {
+	// Add some comparison meta data
+	return groupings.map( function(grouping) {
+		return Object.assign(
+			{},
+			grouping,
+			{
+				startDateRelative: getDateRelativeToToday(new Date(grouping.startDate)),
+				endDateRelative: getDateRelativeToToday(new Date(grouping.endDate))
+			}
+		);
+	})
+	// Filter out ranges completely in the past
+	.filter( function(grouping) {
+		return grouping.endDateRelative.relative >= 0;
+	})
+	// Update ranges that start in the past to start today
+	.map( function(grouping) {
+		if (grouping.startDateRelative.relative < 0) {
+			var today = new Date(Date.now());
+
+			// Convert to epoch and adjust for timezone
+			// Timezone offset is in minutes
+			var todayEpoch = today.valueOf() - (today.getTimezoneOffset() * 60 * 1000);
+
+			// Remove seconds and milliseconds, because we only have the year, month day
+			// in the date from the spreadsheet
+			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
+
+			return Object.assign(
+				{},
+				grouping,
+				{ startDate: todayEpoch },
+				{ dates: removePastDates(grouping.dates) }
+			);
+		} else {
+			return grouping;
+		}
+	});
+}
+
+/**
+ * Remove past dates from a list of date objects
+ */
+function removePastDates(dates) {
+	return dates.filter(function(date) {
+		return getDateRelativeToToday(new Date(date.date)).relative >= 0;
+	});
+}
+
+/**
  * Post data to server
  */
 function makeBooking(data, cb) {
+	console.log(data);
+
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
@@ -100,14 +156,10 @@ function validateBookingInfo(info) {
 }
 
 /**
- * Get the selected date from the state tree
+ * Get the selected grouping from the state tree
  */
-function getSelectedDate(state) {
-	return Object.keys(state.bookings)
-		.map(function(date) {
-			return state.bookings[date];
-		})
-		.filter(function(dateObj) {
+function getSelectedGrouping(state) {
+	return state.bookings.filter(function(dateObj) {
 			return dateObj.selected;
 		})[0];
 }
@@ -116,13 +168,17 @@ function getSelectedDate(state) {
  * Get the selected time from state
  */ 
 function getSelectedTime(state) {
-	return Object.keys(state.bookings)
-		.reduce(function(prev, next) {
-			return prev.concat(state.bookings[next].times);
+	var result = state.bookings.reduce(function(prev, next) {
+			return prev.concat(next.dates.reduce(function(prev, next) {
+				return prev.concat(next.times);
+			}, []));
 		}, [])
 		.filter(function(timeObj) {
 			return timeObj.selected;
 		})[0];
+
+	// console.log('Selected:', result);
+	return result;
 }
 
 /**
@@ -132,6 +188,13 @@ function isDateFullyBooked(date) {
 	return date.times.every(function(t) {
 		return t.booked;
 	});
+}
+
+/**
+ * Check if a booking group is fully booked
+ */
+function isGroupingFullyBooked(grouping) {
+	return grouping.dates.every(isDateFullyBooked);
 }
 
 function emptyElement(element){
@@ -152,21 +215,21 @@ function show(id) {
 }
 
 /**
- * Handle when a date is clicked
+ * Handle when a grouping is clicked
  */
-function handleDateClick(dateObj) {
+function handleGroupingClick(grouping) {
 	// Deselect currently selected
-	var curr = getSelectedDate(state);
+	var curr = getSelectedGrouping(state);
 
 	// Only re-render stuff if we clicked something different
-	if (curr !== dateObj) {
+	if (curr !== grouping) {
 		// Nothing may be selected yet
 		if (curr) {
 			curr.selected = false;
 		}
 
 		// Select new state
-		dateObj.selected = true;
+		grouping.selected = true;
 
 		// Deselect the time
 		var selectedTime = getSelectedTime(state);
@@ -190,6 +253,8 @@ function handleDateClick(dateObj) {
  * Handle when a time is clicked
  */
 function handleTimeClick(timeObj) {
+	console.log(timeObj);
+
 	// Deselect currently selected
 	var curr = getSelectedTime(state);
 
@@ -197,12 +262,17 @@ function handleTimeClick(timeObj) {
 	show('booking-info');
 	show('book');
 
+	// Render the time above the bookings form
+	document.getElementById('js-booking-date').innerText = renderDateString(new Date(parseInt(timeObj.date, 10)));
+	document.getElementById('js-booking-time').innerText = timeObj.time;
+
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
 		if (curr) {
 			curr.selected = false;
 		}
 		timeObj.selected = true;
+
 		renderTimes(state);
 	}
 }
@@ -225,8 +295,9 @@ function handleBook() {
 
 	if (good2go) {
 		// We need to put together the booking to send to the server
-		info.date = getSelectedDate(state).date;
-		info.time = getSelectedTime(state).time;
+		var selectedTime = getSelectedTime(state);
+		info.date = selectedTime.date;
+		info.time = selectedTime.time;
 
 		// Make button spin
 		document.getElementById('book').classList.add('loading');
@@ -320,8 +391,8 @@ function updateValidation(v) {
  */
 function addListTransition(li, offset) {
 	li.style.transition = [
-		'opacity 0.5s ease ' + (offset *  0.05) + 's',
-		'transform 0.5s ease ' + (offset *  0.05) + 's',
+		'opacity 0.5s ease ' + (offset *  0.03) + 's',
+		'transform 0.5s ease ' + (offset *  0.03) + 's',
 	].concat(transitionPrefix).join(',');
 }
 
@@ -330,13 +401,29 @@ function addListTransition(li, offset) {
  */
 var dateOptions = {
 	weekday: 'long',
-	year: 'numeric',
+	// year: 'numeric',
 	month: 'long',
 	day: 'numeric',
 	timeZone: 'UTC',
 };
 function renderDateString(date) {
 	return date.toLocaleString('en-US', dateOptions);
+}
+
+/**
+ * Render the string for the grouping
+ */
+function renderGroupingString(grouping) {
+	var string = '';
+
+	if (grouping.startDate === grouping.endDate) {
+		string = renderDateString(new Date(grouping.startDate));
+	} else {
+		string = renderDateString(new Date(grouping.startDate)) +
+			' - ' + renderDateString(new Date(grouping.endDate));
+	}
+
+	return string;
 }
 
 /**
@@ -374,20 +461,15 @@ function getDateRelativeToToday(date) {
 }
 
 /**
- * Render all of the dates to the page
+ * Render all of the groupings to the page
  */
-function renderDates(state) {
+function renderGroupings(state) {
 	var elem = document.getElementById('js-date');
 	emptyElement(elem);
 
-	// Get all of the dates we have
-	var dates = Object.keys(state.bookings);
-
-	dates.forEach( function(dateId, i) {
-		var dateObj = state.bookings[dateId];
-
+	state.bookings.forEach( function(grouping, i) {
 		// Check where this date is relative to today
-		var dateRelative = getDateRelativeToToday(new Date(dateObj.date));
+		var dateRelative = getDateRelativeToToday(new Date(grouping.endDate));
 
 		// If it's in the past we don't want to render it at all
 		if (dateRelative.relative < 0) {
@@ -395,22 +477,22 @@ function renderDates(state) {
 		}
 
 		var li = document.createElement('li');
-		li.innerText = renderDateString(new Date(dateObj.date));
+		li.innerText = renderGroupingString(grouping);
 
 		// Add style
 		addListTransition(li, i);
 
 		// Selected
-		if (dateObj.selected) {
+		if (grouping.selected) {
 			li.classList.add('selected');
 		}
 
 		// Booked
-		if (isDateFullyBooked(dateObj)) {
+		if (isGroupingFullyBooked(grouping)) {
 			li.classList.add('booked');
 		} else {
 			// Add click handler only if we can actually book it
-			li.onclick = handleDateClick.bind(null, dateObj);
+			li.onclick = handleGroupingClick.bind(null, grouping);
 		}
 
 		elem.appendChild(li);
@@ -431,15 +513,14 @@ function renderTimes(state) {
 	// If we want to do the slide animation
 	if (state.slideAnimation) {
 		elem.classList.remove('appendCompleted');
-		state.slideAnimation = false;
 	}
 	emptyElement(elem);
 
 	// Check which date has been selected
-	var selectedDate = getSelectedDate(state);
+	var selectedGrouping = getSelectedGrouping(state);
 
 	// If none has been selected, we simply return
-	if (!selectedDate) {
+	if (!selectedGrouping) {
 		show('select-a-date');
 		hide('js-time');
 		return;
@@ -447,53 +528,73 @@ function renderTimes(state) {
 		show('js-time');
 		hide('select-a-date');
 
-		// Compare the selected date to today
-		var selectedDateObj = new Date(selectedDate.date);
-		var dateRelative = getDateRelativeToToday(selectedDateObj);
-		if (dateRelative.relative === 0) {
-			show('custom-bookings');
-		} else {
-			hide('custom-bookings');
-
-			// Render all of the times
-			selectedDate.times.forEach(function(time, i) {
-				var li = document.createElement('li');
-				li.innerHTML = '<strong>' + time.time + '</strong><span class="date">' + selectedDateObj.toLocaleString('en-US', {
-					weekday: 'long',
-					month: 'long',
-					day: 'numeric',
-					timeZone: 'UTC',	
-				}) + '</span>';
-
-				addListTransition(li, i);
-
-				if (time.selected) {
-					li.classList.add('selected');
-				}
-
-				// If we are booked we don't need a click handler
-				if (time.booked) {
-					li.classList.add('booked');
-				} else {
-					li.onclick = handleTimeClick.bind(null, time);
-				}
-
-				elem.appendChild(li);
-			});
-		}
-
-		// The transition will not work without being "async"
-		setTimeout(function() {
-			elem.classList.add('appendCompleted');	
-		}, 0);
+		// Go through each date in the grouping
+		var offset = 0;
+		selectedGrouping.dates.forEach(function(date) {
+			renderDate(elem, date, offset);
+			offset += date.times.length;
+		});
 	}
+
+	state.slideAnimation = false;
+}
+
+/**
+ * Renders the times for a single date onto the page
+ */
+function renderDate(elem, dateToRender, offset) {
+	// Compare the date to today
+	var dateRelative = getDateRelativeToToday(new Date(dateToRender.date));
+
+	// Create a list
+	var listElem = document.createElement('ul');
+	var dateString = renderDateString(new Date(parseInt(dateToRender.date, 10)));
+
+	if (dateRelative.relative === 0) {
+		listElem = document.createElement('p');
+		listElem.innerHTML = '<em>Please call us for bookings today at:<br><span class="show-mobile"><a href="tel:204-380-4799">(204) 380-4799</a></span><span class="show-desktop"><strong>(204) 380-4799</strong></span></em>';
+	} else {
+		// Render all of the times
+		dateToRender.times.forEach(function(time, i) {
+			var li = document.createElement('li');
+			li.innerHTML = dateString + '<span>' + time.time + '</span>';
+
+			if (state.slideAnimation) {
+				addListTransition(li, i + offset);
+			}
+
+			if (time.selected) {
+				li.classList.add('selected');
+			}
+
+			// If we are booked we don't need a click handler
+			if (time.booked) {
+				li.classList.add('booked');
+			} else {
+				li.onclick = handleTimeClick.bind(null, time);
+			}
+
+			listElem.appendChild(li);
+		});
+	}
+
+	// Create a heading for the date
+	var headingElem = document.createElement('h4');
+	headingElem.innerText = dateString;
+	elem.appendChild(headingElem);
+	elem.appendChild(listElem);
+
+	// The transition will not work without being "async"
+	setTimeout(function() {
+		listElem.classList.add('appendCompleted');	
+	}, 0);
 }
 
 /**
  * Render the bookings to the page
  */
 function renderBookings(bookings) {
-	renderDates(state);
+	renderGroupings(state);
 	renderTimes(state);
 }
 

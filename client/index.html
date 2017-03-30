@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="description" content="You and your team are given a mission and enter into a themed room. You have 60 minutes to discover clues, solve puzzles, answer riddles, and manipulate contraptions in order to complete your mission.">
     <title>Adrenaline Escapes | Steinbach's most thrilling escape!</title>
-    <link rel="stylesheet" href="css/app_03_18_2017.css">
+    <link rel="stylesheet" href="css/app_03_30_2017.css">
   </head>
   <body>
 
@@ -156,7 +156,7 @@
           </div>
 
           <div id="booking-content">
-            <p>Select a day and time below.</p>
+            <p>Select a weekend and time below.</p>
             <p>
               For corporate bookings, or if you don't see a time that works for you, please email us at: <span><a href="mailto:info@adrenalineescapes.com">info@adrenalineescapes.com</a></span>
             </p>
@@ -166,7 +166,7 @@
 
               <div class="date-time">
                   <div class="selection">
-                      <h3>Day</h3>
+                      <h3>Weekend</h3>
                       <ul id="js-date">
                         <!-- Populated by JS -->
                       </ul>
@@ -176,25 +176,19 @@
                       <h3>Time</h3>
 
                       <!-- Select a day -->
-                      <p id="select-a-date"><em>Please select a day</em></p>
+                      <p id="select-a-date"><em>Please select a weekend</em></p>
 
-                      <!-- Custom bookings -->
-                      <p id="custom-bookings" class="hide">
-                        <em>Please call us for bookings today at
-                          <span class="show-mobile"><a href="tel:204-380-4799">(204) 380-4799</a></span>
-                          <span class="show-desktop"><strong>(204) 380-4799</strong></span>
-                        </em>
-                      </p>
-
-                      <ul id="js-time" class="hide">
-                        <!-- Populated by JS -->
-                      </ul>
+                      <div id="js-time" class="hide time-list">
+                      </div>
                   </div>
               </div>
 
               <!-- Booking Info -->
               <div class="booking-form hide" id="booking-info">
                   <h3>Booking Info</h3>
+                  <div class="booking-time-date">
+                    <span class="booking-time" id="js-booking-date"></span><span class="time" id="js-booking-time"></span>
+                  </div>
                   <form>
                     <label for="name" class="text-right">
                       <span>Name</span>
@@ -293,7 +287,6 @@
       ga('send', 'pageview');
 
     </script>
-    <script type="text/javascript" src="js/app_03_18_2017.js"></script>
-
+    <script type="text/javascript" src="js/app_03_30_2017.js"></script>
   </body>
 </html>

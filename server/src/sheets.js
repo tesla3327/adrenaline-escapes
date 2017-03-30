@@ -16,6 +16,8 @@ const EMAIL_COL = 3;
 const PHONE_COL = 4;
 const PARTY_SIZE_COL = 5;
 
+const MILLISECONDS_IN_DAY = 86400 * 1000;
+
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -145,8 +147,6 @@ const scrubPersonalData = e => {
  */
 const groupByDate = bookings => {
   const grouped = bookings.reduce( (prev, next) => {
-    // console.log('Prev:', prev);
-    // console.log('Next:', next);
 
     if (!prev[next.date] || !prev[next.date].times) {
       prev[next.date] = {
@@ -160,6 +160,40 @@ const groupByDate = bookings => {
 
     return prev;
   }, {});
+
+  return grouped;
+};
+
+/**
+ * Groups all consecutive days together
+ * Must be grouped by date first.
+ */
+const groupConsecutive = bookings => {
+  const grouped = Object.keys(bookings).reduce( (prev, next) => {
+    // Get the last date range
+    const lastRange = prev[prev.length - 1];
+
+    // Check if this date is one day after or not
+    // console.log('End:', lastRange && lastRange.endDate);
+    // console.log('next:', next - MILLISECONDS_IN_DAY);
+    // console.log(lastRange && ((next - MILLISECONDS_IN_DAY) === lastRange.endDate));
+
+    if (lastRange && ((next - MILLISECONDS_IN_DAY) === parseInt(lastRange.endDate, 10))) {
+      // Add to last range
+      lastRange.endDate = parseInt(next, 10);
+      lastRange.dates.push( bookings[next] );
+      // prev[prev.length - 1] = lastRange;
+    } else {
+      // Start new date range
+      prev.push({
+        startDate: parseInt(next, 10),
+        endDate: parseInt(next, 10),
+        dates: [ bookings[next] ],
+      });
+    }
+
+    return prev;
+  }, []);
 
   return grouped;
 };
@@ -217,6 +251,8 @@ module.exports = {
   makeBooking,
   scrubPersonalData,
   groupByDate,
+  groupConsecutive,
+  MILLISECONDS_IN_DAY
 };
 
 // init().then( getAvailableBookings ).then( console.log );
