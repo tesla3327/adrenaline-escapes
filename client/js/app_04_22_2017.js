@@ -95,8 +95,8 @@ function makeBooking(data, cb) {
 		bookingFailure();
 	};
 
-	req.timeout = 6000;
 	req.open('POST', SERVER + 'booking');
+	req.timeout = 6000;
 	req.setRequestHeader('Content-Type', 'application/json');
 
 	req.send(JSON.stringify(data));
