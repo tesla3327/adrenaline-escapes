@@ -36,14 +36,11 @@ function getBookings(cb) {
 function adjustGroupings(groupings) {
 	// Add some comparison meta data
 	return groupings.map( function(grouping) {
-		return Object.assign(
-			{},
-			grouping,
-			{
-				startDateRelative: getDateRelativeToToday(new Date(grouping.startDate)),
-				endDateRelative: getDateRelativeToToday(new Date(grouping.endDate))
-			}
-		);
+		var result = grouping;
+		result.startDateRelative = getDateRelativeToToday(new Date(grouping.startDate));
+		result.endDateRelative = getDateRelativeToToday(new Date(grouping.endDate));
+
+		return result;
 	})
 	// Filter out ranges completely in the past
 	.filter( function(grouping) {
@@ -62,12 +59,11 @@ function adjustGroupings(groupings) {
 			// in the date from the spreadsheet
 			todayEpoch = todayEpoch - (todayEpoch % (1000 * 60 * 60 * 24));
 
-			return Object.assign(
-				{},
-				grouping,
-				{ startDate: todayEpoch },
-				{ dates: removePastDates(grouping.dates) }
-			);
+			var result = grouping;
+			result.startDate = todayEpoch;
+			result.dates = removePastDates(grouping.dates);
+
+			return result;
 		} else {
 			return grouping;
 		}

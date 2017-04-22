@@ -58,7 +58,6 @@ strong {
 }
 
 p {
-	// To prevent overflow in IE when in a flex container
 	max-width: 100%;
 }
 
