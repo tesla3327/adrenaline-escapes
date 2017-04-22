@@ -6,7 +6,7 @@ var moveTo = new MoveTo();
 
 // These transitions are added without any delay
 var transitionPrefix = ['background 0.2s ease', 'color 0.2s ease'];
-var SERVER = location.protocol === 'file:'
+var SERVER = location.protocol == 'file:'
 	? 'http://localhost:3000/'
 	: 'https://adrenaline-escapes.herokuapp.com/';
 
