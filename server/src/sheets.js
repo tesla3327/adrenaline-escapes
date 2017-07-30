@@ -7,14 +7,15 @@ var google = require('googleapis');
 let sheets;
 
 const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
-const SPREADSHEET_ID = '1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
+const SPREADSHEET_ID = '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI';//'1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
 
 const DATE_COL = 0;
 const TIME_COL = 1;
-const NAME_COL = 2;
-const EMAIL_COL = 3;
-const PHONE_COL = 4;
-const PARTY_SIZE_COL = 5;
+const ROOM_COL = 2;
+const NAME_COL = 3;
+const EMAIL_COL = 4;
+const PHONE_COL = 5;
+const PARTY_SIZE_COL = 6;
 
 const MILLISECONDS_IN_DAY = 86400 * 1000;
 
@@ -106,6 +107,7 @@ const getAllBookings = () => {
         date: date.valueOf() - (date.getTimezoneOffset() * 60 * 1000),
         dateString: e[DATE_COL],
         time: e[TIME_COL],
+        room: e[ROOM_COL],
         name: e[NAME_COL],
         email: e[EMAIL_COL],
         phone: e[PHONE_COL],
@@ -137,6 +139,7 @@ const scrubPersonalData = e => {
   return {
     date: e.date,
     dateString: e.dateString,
+    room: e.room,
     time: e.time,
     booked: e.booked !== undefined ? e.booked : !bookingIsAvailable(e),
   };
@@ -213,7 +216,10 @@ const getAvailableBookings = () =>
 const makeBooking = booking => {
   return getAllBookings().then( bookings => { 
     // Check where the spot is in the spreadsheet
-    const index = bookings.findIndex( e => e.date === booking.date && e.time === booking.time );
+    const index = bookings.findIndex( e =>
+      e.date === booking.date &&
+      e.time === booking.time &&
+      e.room === booking.room);
 
     if ( index >= 0 && bookingIsAvailable(bookings[index])  ) {
 
@@ -221,11 +227,11 @@ const makeBooking = booking => {
         {
           valueInputOption: 'USER_ENTERED',
           spreadsheetId: SPREADSHEET_ID,
-          range: `Bookings!A${ index + 2 }:F${ index + 2 }`,
+          range: `Bookings!A${ index + 2 }:G${ index + 2 }`,
           includeValuesInResponse: true,  
           resource: {
             values: [ 
-              [null, null, booking.name, booking.email, booking.phone, booking.partySize],
+              [null, null, null, booking.name, booking.email, booking.phone, booking.partySize],
             ],
           }
         }
