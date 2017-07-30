@@ -223,7 +223,7 @@ function handleGroupingClick(grouping) {
 	  hitType: 'event',
 	  eventCategory: 'Weekend',
 	  eventAction: 'select',
-	  dimension3: renderGroupingString(grouping)
+	  dimension3: renderGroupingString(grouping, renderDateString.bind(null, true))
 	});
 
 	// Scroll to show the times
@@ -284,9 +284,9 @@ function handleTimeClick(timeObj) {
 	show('book');
 
 	// Render the time above the bookings form
-	var dateString = renderDateString(new Date(parseInt(timeObj.date, 10)));
-	document.getElementById('js-booking-date').innerText = timeObj.room + ' - ' + dateString;
-	document.getElementById('js-booking-time').innerText = timeObj.time;
+	var dateString = renderDateString(true, new Date(parseInt(timeObj.date, 10)));
+	document.getElementById('js-booking-date').innerText = timeObj.room;
+	document.getElementById('js-booking-time').innerHTML = timeObj.time + '<span class="secondary">' + dateString + '</span>';
 
 	if (curr !== timeObj) {
 		// Nothing may be selected yet
@@ -344,8 +344,10 @@ function handleBook() {
 function bookingSuccess(info) {
 	// Populate success fields
 	var date = new Date(info.date);
-	document.getElementById('success-date').innerText = renderDateString(date);
+	document.getElementById('success-room').innerText = info.room;
+	document.getElementById('success-date').innerText = renderDateString(true, date);
 	document.getElementById('success-time').innerText = info.time;
+	document.getElementById('success-size').innerText = info.partySize;
 
 	hide('booking-content');
 	show('booking-success');	
@@ -435,21 +437,24 @@ var dateOptions = {
 	day: 'numeric',
 	timeZone: 'UTC',
 };
-function renderDateString(date) {
-	return date.toLocaleString('en-US', dateOptions);
+function renderDateString(weekday, date) {
+	var opts = Object.assign({}, dateOptions, {
+		weekday: weekday ? dateOptions.weekday : undefined,
+	});
+	return date.toLocaleString('en-US', opts);
 }
 
 /**
  * Render the string for the grouping
  */
-function renderGroupingString(grouping) {
+function renderGroupingString(grouping, func) {
 	var string = '';
 
 	if (grouping.startDate === grouping.endDate) {
-		string = renderDateString(new Date(grouping.startDate));
+		string = func(new Date(grouping.startDate));
 	} else {
-		string = renderDateString(new Date(grouping.startDate)) +
-			' - ' + renderDateString(new Date(grouping.endDate));
+		string = func(new Date(grouping.startDate)) +
+			' - ' + func(new Date(grouping.endDate));
 	}
 
 	return string;
@@ -506,7 +511,11 @@ function renderGroupings(state) {
 		}
 
 		var li = document.createElement('li');
-		li.innerText = renderGroupingString(grouping);
+		var dates = renderGroupingString(grouping, renderDateString.bind(null, false));
+		var weekdays = renderGroupingString(grouping, function (date) {
+			return date.toLocaleString('en-US', { weekday: 'long'} );
+		});
+		li.innerHTML = '<span>' + dates + '</span><span class="secondary">' + weekdays + '</span>';
 
 		// Add style
 		addListTransition(li, i);
@@ -577,7 +586,7 @@ function renderDate(elem, dateToRender, offset) {
 
 	// Create a list
 	var listElem = document.createElement('ul');
-	var dateString = renderDateString(new Date(parseInt(dateToRender.date, 10)));
+	var dateString = renderDateString(true, new Date(parseInt(dateToRender.date, 10)));
 
 	if (dateRelative.relative === 0) {
 		listElem = document.createElement('p');
@@ -586,7 +595,7 @@ function renderDate(elem, dateToRender, offset) {
 		// Render all of the times
 		dateToRender.times.forEach(function(time, i) {
 			var li = document.createElement('li');
-			li.innerHTML = time.room + '<span>' + time.time + '</span>';
+			li.innerHTML = time.room + '<span class="time">' + time.time + '</span>';
 
 			if (state.slideAnimation) {
 				addListTransition(li, i + offset);

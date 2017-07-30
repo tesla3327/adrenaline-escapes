@@ -388,15 +388,37 @@ table tr:nth-child(even) td {
 	transform: translateX(-10px);
 }
 
-#booking li span,
-#booking-info span.time {
+#booking .secondary {
+	display: block;
+	font-size: 0.8em;
+	margin-top: -15px;
+	line-height: 40px;
+}
+
+span.time {
 	font-weight: 500;
 	float: right;
 }
 
 #booking-info .booking-time-date {
+	display: flex;
+	justify-content: space-between;
 	margin: 1em 0;
 	color: #b2d235;
+}
+
+#booking-info .booking-time {
+	font-weight: 500;
+}
+
+#booking-info .booking-time-date .secondary {
+	margin-top: initial;
+	line-height: initial;
+	font-weight: 300;
+}
+
+.booking-time-date > .time {
+	text-align: right;
 }
 
 #booking li.selected {
