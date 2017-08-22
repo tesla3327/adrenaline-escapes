@@ -9,7 +9,7 @@ sheets.initialize().then(() => {
 	// 		let data = sheets.groupByDate(bookings.map( sheets.scrubPersonalData ));
 	// 		data = sheets.groupConsecutive(data);
 	// 		console.log(JSON.stringify(data, null, 2));
-	// 	});	
+	// 	});
 });
 
 
@@ -32,7 +32,7 @@ app.use( bodyParser.json() );
 app.get('/bookings', (req, res) => {
 	// We want all the bookings, but to make sure that no personal data is sent
 	sheets.getAllBookings()
-		.then( bookings => {
+		.then( ({ bookings }) => {
 			// Remove any personally identifiable information
 			const scrubbed = bookings.map( sheets.scrubPersonalData );
 
@@ -76,4 +76,3 @@ app.post('/booking', (req, res) => {
 app.listen(PORT, () => {
   console.log(`API started on port ${PORT}`);
 });
-

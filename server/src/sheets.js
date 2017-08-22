@@ -9,14 +9,6 @@ let sheets;
 const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
 const SPREADSHEET_ID = '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI';//'1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
 
-const DATE_COL = 0;
-const TIME_COL = 1;
-const ROOM_COL = 2;
-const NAME_COL = 3;
-const EMAIL_COL = 4;
-const PHONE_COL = 5;
-const PARTY_SIZE_COL = 6;
-
 const MILLISECONDS_IN_DAY = 86400 * 1000;
 
 // If modifying these scopes, delete your previously saved credentials
@@ -80,6 +72,22 @@ const updateValuesInSheet = (params, data) => {
   });
 };
 
+const findIndexFromHeader = (key, headers) =>
+  headers.findIndex(elem => elem.toLowerCase() === key.toLowerCase());
+
+/**
+ * Get the index for each column based on the headers
+ */
+const getColumnIndex = headers => ({
+  dateString: findIndexFromHeader('date', headers),
+  time: findIndexFromHeader('time', headers),
+  room: findIndexFromHeader('room', headers),
+  name: findIndexFromHeader('name', headers),
+  email: findIndexFromHeader('email', headers),
+  phone: findIndexFromHeader('phone', headers),
+  partySize: findIndexFromHeader('party size', headers),
+});
+
 /**
  * Get the bookings from the spreadsheet into a nice JSON object
  *
@@ -96,22 +104,25 @@ const getAllBookings = () => {
   .then( response => {
     const values = response.values;
 
-    // Remove the headers
-    values.shift();
+    // Grab the headers
+    const headers = values.shift();
+
+    // Find the column for each data type based on headers
+    const colIndex = getColumnIndex(headers);
 
     // Map each to an object
     const bookings = values.map( (e, i) => {
-      const date = new Date(Date.parse(e[DATE_COL]));
+      const date = new Date(Date.parse(e[colIndex.dateString]));
 
       return {
         date: date.valueOf() - (date.getTimezoneOffset() * 60 * 1000),
-        dateString: e[DATE_COL],
-        time: e[TIME_COL],
-        room: e[ROOM_COL],
-        name: e[NAME_COL],
-        email: e[EMAIL_COL],
-        phone: e[PHONE_COL],
-        partySize: e[PARTY_SIZE_COL],
+        dateString: e[colIndex.dateString],
+        time: e[colIndex.time],
+        room: e[colIndex.room],
+        name: e[colIndex.name],
+        email: e[colIndex.email],
+        phone: e[colIndex.phone],
+        partySize: e[colIndex.partySize],
       }
     })
     .filter( e => e.date !== undefined && e.time !== undefined )
@@ -120,7 +131,7 @@ const getAllBookings = () => {
       return Object.assign({}, e, { booked: !bookingIsAvailable(e) });
     });
 
-    return bookings;
+    return { bookings, colIndex };
   });
 };
 
@@ -205,7 +216,7 @@ const groupConsecutive = bookings => {
  * Filter bookings down to what is available
  */
 const getAvailableBookings = () =>
-  getAllBookings().then( bookings => {
+  getAllBookings().then( ({ bookings }) => {
     return bookings
       .filter( e => bookingIsAvailable(e) );
   });
@@ -214,7 +225,7 @@ const getAvailableBookings = () =>
  * Check to see if the requested spot is open, and then book it.
  */
 const makeBooking = booking => {
-  return getAllBookings().then( bookings => { 
+  return getAllBookings().then( ({ bookings, colIndex }) => {
     // Check where the spot is in the spreadsheet
     const index = bookings.findIndex( e =>
       e.date === booking.date &&
@@ -222,17 +233,25 @@ const makeBooking = booking => {
       e.room === booking.room);
 
     if ( index >= 0 && bookingIsAvailable(bookings[index])  ) {
+      // Construct our row
+      // We have to put nulls where we don't want to update anything.
+      // Use a magic number since we don't know what they'll do with the sheet.
+      const row = new Array(26).fill(null);
+      row[colIndex.name] = booking.name;
+      row[colIndex.email] = booking.email;
+      row[colIndex.phone] = booking.phone;
+      row[colIndex.partySize] = booking.partySize;
+
+      console.log(row);
 
       return updateValuesInSheet(
         {
           valueInputOption: 'USER_ENTERED',
           spreadsheetId: SPREADSHEET_ID,
-          range: `Bookings!A${ index + 2 }:G${ index + 2 }`,
-          includeValuesInResponse: true,  
+          range: `Bookings!A${ index + 2 }:AA${ index + 2 }`,
+          includeValuesInResponse: true,
           resource: {
-            values: [ 
-              [null, null, null, booking.name, booking.email, booking.phone, booking.partySize],
-            ],
+            values: [row],
           }
         }
       );
@@ -262,7 +281,3 @@ module.exports = {
 };
 
 // init().then( getAvailableBookings ).then( console.log );
-
-
-
-
