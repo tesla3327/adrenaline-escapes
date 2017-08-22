@@ -69,18 +69,26 @@
           <div class="image-container">
             <img src="./img/bank_heist.jpg" />
           </div>
-          
+
+          <!-- Summary -->
           <p>
             Your team is Southeastern Manitoba’s most successful crime syndicate and you're going to be facing your greatest challenge yet; a heist at the Stoney Brook Bank.
           </p>
 
-          <p>
-            You have gained access to the bank manager’s office and the security system has been suspended for 60 minutes.
-          </p>
+          <input type="checkbox" id="bank-heist-toggle">
+          <!-- More information -->
+          <div id="bank-heist" class="expanded-info">
+            <p>
+              You have gained access to the bank manager’s office and the security system has been suspended for 60 minutes.
+            </p>
 
-          <p>
-            Gain access to the vault, grab as much cash as you can and escape before the alarm sounds.  If you don't make it, your future will involve the bare walls and barred windows of a jail cell.  So get out in time, and cement your place in the history books.
-          </p>
+            <p>
+              Gain access to the vault, grab as much cash as you can and escape before the alarm sounds.  If you don't make it, your future will involve the bare walls and barred windows of a jail cell.  So get out in time, and cement your place in the history books.
+            </p>
+          </div>
+
+          <label for="bank-heist-toggle" class="more-info">Click for more details [+]</label>
+          <label for="bank-heist-toggle" class="less-info">Click for less details [&mdash;]</label>
         </div>
       </section>
 

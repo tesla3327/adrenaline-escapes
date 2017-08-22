@@ -374,6 +374,43 @@ table tr:nth-child(even) td {
 	padding-bottom: 0; */
 }
 
+#room input {
+	display: none;
+}
+
+/* Style our label here like a link */
+#room label {
+	cursor: pointer;
+	color: #74acdc;
+}
+
+.expanded-info p:first-child {
+	margin-top: 0;
+}
+
+.expanded-info,
+.less-info {
+	display: none;
+}
+
+#bank-heist-toggle:checked ~ .expanded-info,
+#bank-heist-toggle:checked ~ .less-info {
+	display: block;
+}
+
+#bank-heist-toggle:checked ~ .more-info {
+	display: none;
+}
+
+#pirates-plunder-toggle:checked ~ .expanded-info,
+#pirates-plunder-toggle:checked ~ .less-info {
+	display: block;
+}
+
+#pirates-plunder-toggle:checked ~ .more-info {
+	display: none;
+}
+
 #room ul {
 	list-style: none;
 	margin-left: 0;
