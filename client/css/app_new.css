@@ -29,7 +29,7 @@ h1, h2, h3 {
 	font-weight: 700;
 	color: #b2d235;
 	font-style: italic;
-	// 
+	//
 	text-transform: uppercase;
 	margin: 0;
 	padding: 0;
@@ -64,8 +64,26 @@ p {
 /**
  * ------ Components -------
  */
+.image-container {
+	width: 100%;
+	margin-top: 0.5em;
+	border: 1px solid #222;
+	box-shadow: 0 0 40px rgba(0,0,0,0.4);
+}
+
+img {
+	object-fit: contain;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
 section {
 	padding: 1em 1em;
+}
+
+section .content + .content {
+	padding-top: 3em;
 }
 
 section.alternate {
@@ -92,10 +110,6 @@ section.alternate {
 
 .float section + section {
 	padding-top: 2em;
-}
-
-.fancy-heading {
-	
 }
 
 ul {
@@ -148,7 +162,7 @@ a.button.hollow span {
 a.button.hollow.loading {
 	background: #b2d235;
 	// padding-left: 4em;
-	padding-right: 3em;	
+	padding-right: 3em;
 }
 
 a.button.hollow.loading span {
@@ -543,9 +557,10 @@ footer p {
 	p, h1, h2 {
 		text-align: center;
 	}
-	
+
 	section {
 		display: flex;
+		align-items: flex-start;
 		justify-content: center;
 		padding: 2em 2em;
 	}
@@ -557,6 +572,11 @@ footer p {
 		justify-content: center;
 		align-items: center;
 		max-width: 100%;
+		padding: 0 1em;
+	}
+
+	section .content + .content {
+		padding-top: 0;
 	}
 
 	a.button.hollow {
@@ -565,7 +585,7 @@ footer p {
 	}
 
 	a.button.hollow:active {
-		top: 1px;	
+		top: 1px;
 	}
 
 	a.button.hollow {
@@ -578,7 +598,7 @@ footer p {
 	a.button.hollow:hover {
 		background: #b2d235;
 		padding-left: 4em;
-		padding-right: 4em;		
+		padding-right: 4em;
 		-webkit-transform: skew(-15deg) !important;
 	    -moz-transform: skew(-15deg) !important;
 	    -o-transform: skew(-15deg) !important;
@@ -616,9 +636,9 @@ footer p {
 	.google-map.large {
 		display: block;
 	}
-	
+
 	.fancy-heading {
-		background: #b2d235;   
+		background: #b2d235;
 		-webkit-transform: skew(-15deg) !important;
 	   -moz-transform: skew(-15deg) !important;
 	   -o-transform: skew(-15deg) !important;
@@ -680,9 +700,9 @@ footer p {
 	}
 
 	#booking-content {
-		display: flex; 
-		flex-direction: column; 
-		align-items: center; 
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	#booking-content.hide {
@@ -708,6 +728,10 @@ footer p {
 
 	.selection + .selection {
 		padding-left: 2em;
+	}
+
+	section .content {
+		padding: 0 2em;
 	}
 }
 
