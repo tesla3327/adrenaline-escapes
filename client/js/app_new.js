@@ -88,7 +88,7 @@ function makeBooking(data, cb) {
 	var req = new XMLHttpRequest();
 
 	req.onload = function() {
-		cb(this);	
+		cb(this);
 	};
 
 	req.ontimeout = function() {
@@ -164,7 +164,7 @@ function getSelectedGrouping(state) {
 
 /**
  * Get the selected time from state
- */ 
+ */
 function getSelectedTime(state) {
 	var result = state.bookings.reduce(function(prev, next) {
 			return prev.concat(next.dates.reduce(function(prev, next) {
@@ -324,7 +324,7 @@ function handleBook() {
 
 		// Make button spin
 		document.getElementById('book').classList.add('loading');
-		
+
 		makeBooking(info, function(response) {
 			if (response.status >= 200 && response.status < 300) {
 				bookingSuccess(info);
@@ -350,7 +350,7 @@ function bookingSuccess(info) {
 	document.getElementById('success-size').innerText = info.partySize;
 
 	hide('booking-content');
-	show('booking-success');	
+	show('booking-success');
 
 	// Scroll to show
 	location = '#booking';
@@ -513,7 +513,7 @@ function renderGroupings(state) {
 		var li = document.createElement('li');
 		var dates = renderGroupingString(grouping, renderDateString.bind(null, false));
 		var weekdays = renderGroupingString(grouping, function (date) {
-			return date.toLocaleString('en-US', { weekday: 'long'} );
+			return date.toLocaleString('en-US', { weekday: 'long', timeZone: 'UTC' } );
 		});
 		li.innerHTML = '<span>' + dates + '</span><span class="secondary">' + weekdays + '</span>';
 
@@ -538,7 +538,7 @@ function renderGroupings(state) {
 
 	// The transition will not work without being "async"
 	setTimeout(function() {
-		elem.classList.add('appendCompleted');	
+		elem.classList.add('appendCompleted');
 	}, 0);
 }
 
@@ -595,6 +595,7 @@ function renderDate(elem, dateToRender, offset) {
 		// Render all of the times
 		dateToRender.times.forEach(function(time, i) {
 			var li = document.createElement('li');
+			console.log(time);
 			li.innerHTML = time.room + '<span class="time">' + time.time + '</span>';
 
 			if (state.slideAnimation) {
@@ -624,7 +625,7 @@ function renderDate(elem, dateToRender, offset) {
 
 	// The transition will not work without being "async"
 	setTimeout(function() {
-		listElem.classList.add('appendCompleted');	
+		listElem.classList.add('appendCompleted');
 	}, 0);
 }
 
@@ -726,6 +727,8 @@ function setupGAEvents () {
 function init() {
 	getBookings(function(bookings) {
 		state.bookings = bookings;
+
+		console.log(bookings);
 		render(state);
 
 		// Only now do we get our maps
@@ -736,5 +739,3 @@ function init() {
 }
 
 window.onload = init;
-
-
