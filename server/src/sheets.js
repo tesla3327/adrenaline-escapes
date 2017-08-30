@@ -7,7 +7,7 @@ var google = require('googleapis');
 let sheets;
 
 const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
-const SPREADSHEET_ID = '1b5LiqAKF9svaWi7vNPkyRvKFa_DNAtOHpvQNh8rZvlI';//'1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
+const SPREADSHEET_ID = '1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
 
 const MILLISECONDS_IN_DAY = 86400 * 1000;
 

@@ -327,11 +327,11 @@ table tr:nth-child(even) td {
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
-	/*background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);*/
-	/*background-repeat: no-repeat;*/
-	background-image: url('../img/hero-image.jpg');
+	background: linear-gradient(-30deg, hsl(73, 20%, 25%), rgb(50,50,50) 70%);
+	background-repeat: no-repeat;
+	/* background-image: url('../img/hero-image.jpg');
 	background-size: cover;
-	background-position: center;
+	background-position: center; */
 	padding-bottom: 2em;
 }
 
