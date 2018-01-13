@@ -229,8 +229,7 @@ const makeBooking = booking => {
     // Check where the spot is in the spreadsheet
     const index = bookings.findIndex( e =>
       e.date === booking.date &&
-      e.time === booking.time &&
-      e.room === booking.room);
+      e.time === booking.time);
 
     if ( index >= 0 && bookingIsAvailable(bookings[index])  ) {
       // Construct our row
@@ -241,8 +240,7 @@ const makeBooking = booking => {
       row[colIndex.email] = booking.email;
       row[colIndex.phone] = booking.phone;
       row[colIndex.partySize] = booking.partySize;
-
-      console.log(row);
+      row[colIndex.room] = booking.room;
 
       return updateValuesInSheet(
         {
