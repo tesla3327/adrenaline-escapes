@@ -115,6 +115,7 @@ function getBookingInfo() {
 		email: getValueOfInput('email'),
 		phone: getValueOfInput('phone'),
 		partySize: getValueOfInput('party-size'),
+		room: getValueOfInput('room-selection'),
 	};
 }
 
@@ -149,6 +150,7 @@ function validateBookingInfo(info) {
 		name: info.name !== '',
 		email: info.email !== '',
 		phone: info.phone !== '',
+		room: info.room !== 'Any Room',
 		partySize: validatePartySize(info.partySize),
 	}
 }
@@ -175,7 +177,6 @@ function getSelectedTime(state) {
 			return timeObj.selected;
 		})[0];
 
-	// console.log('Selected:', result);
 	return result;
 }
 
@@ -283,6 +284,13 @@ function handleTimeClick(timeObj) {
 	show('booking-info');
 	show('book');
 
+	// If they can choose a room, add the room drop down
+	if (timeObj.room === 'Any Room') {
+		show('select-room');
+	} else {
+		hide('select-room');
+	}
+
 	// Render the time above the bookings form
 	var dateString = renderDateString(true, new Date(parseInt(timeObj.date, 10)));
 	document.getElementById('js-booking-date').innerText = timeObj.room;
@@ -320,7 +328,7 @@ function handleBook() {
 		var selectedTime = getSelectedTime(state);
 		info.date = selectedTime.date;
 		info.time = selectedTime.time;
-		info.room = selectedTime.room;
+		info.room = info.room || selectedTime.room;
 
 		// Make button spin
 		document.getElementById('book').classList.add('loading');
@@ -414,6 +422,12 @@ function updateValidation(v) {
 		hide('party-size-error');
 	} else {
 		show('party-size-error');
+	}
+
+	if (v.room) {
+		hide('room-error');
+	} else {
+		show('room-error');
 	}
 }
 
@@ -595,7 +609,6 @@ function renderDate(elem, dateToRender, offset) {
 		// Render all of the times
 		dateToRender.times.forEach(function(time, i) {
 			var li = document.createElement('li');
-			console.log(time);
 			li.innerHTML = time.room + '<span class="time">' + time.time + '</span>';
 
 			if (state.slideAnimation) {

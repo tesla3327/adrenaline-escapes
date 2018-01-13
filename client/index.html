@@ -233,7 +233,20 @@
                   <div class="booking-time-date">
                     <span class="booking-time" id="js-booking-date"></span><span class="time" id="js-booking-time"></span>
                   </div>
-                  <form>
+                  <form>    
+                    <div id="select-room">
+                      <label for="room" class="text-right">
+                        <span>Room</span>
+                        <span id="room-error" class="error hide">Please select a room</span>
+                      </label>
+                      <div class="select">
+                        <select id="room-selection">
+                          <option value="Any Room">Please select a room</option>
+                          <option value="Pirate's Plunder">Pirate's Plunder</option>
+                          <option value="Bank Heist">Bank Heist</option>
+                        </select>
+                      </div>
+                    </div>
                     <label for="name" class="text-right">
                       <span>Name</span>
                       <span id="name-error" class="error hide">Please enter a name</span>

@@ -188,15 +188,6 @@ a.button.hollow.loading span::after {
 	to { transform: translateY(4px) rotate(360deg); }
 }
 
-// a.button:hover,
-// a.button:active
-// a.button:focus,
-// button:hover,
-// button:active,
-// button:focus {
-// 	color: #88a419;
-// }
-
 form label span {
 	font-size: 0.9em;
 	line-height: 1.5em;
@@ -226,6 +217,7 @@ form input {
 	border: 1px solid rgb(70,70,70);
 	border-radius: 2px;
 	transition: all 0.2s ease-in-out;
+	-webkit-appearance:none;
 }
 
 form select {
@@ -236,6 +228,7 @@ form select {
 	color: #f1f1f1;
 	width: calc(100% - 1em);
 	height: 50px;
+	-webkit-appearance:none;
 }
 
 form .select {
@@ -499,6 +492,10 @@ span.time {
 
 .time-list p {
 	text-align: left;
+}
+
+#select-room-template {
+	display: none;
 }
 
 /**
