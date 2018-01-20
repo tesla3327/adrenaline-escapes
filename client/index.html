@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="description" content="You and your team are given a mission and enter into a themed room. You have 60 minutes to discover clues, solve puzzles, answer riddles, and manipulate contraptions in order to complete your mission.">
     <title>Adrenaline Escapes | Steinbach's most thrilling escape!</title>
-    <link rel="stylesheet" href="css/app_01_13_2018.css">
+    <link rel="stylesheet" href="css/app_01_20_2018.css">
   </head>
   <body>
 
@@ -226,9 +226,11 @@
                       </div>
                   </div>
               </div>
+            </div>
 
-              <!-- Booking Info -->
-              <div class="booking-form hide" id="booking-info">
+            <!-- Booking Info -->
+            <div class="narrow-content hide" id="booking-info">
+              <div class="booking-form">
                   <h3>Booking Info</h3>
                   <div class="booking-time-date">
                     <span class="booking-time" id="js-booking-date"></span><span class="time" id="js-booking-time"></span>
@@ -267,17 +269,28 @@
 
                     <label for="party-size" class="text-right">
                       <span>Party Size <em>(We recommend 4-6 people)</em></span>
-                      <span id="party-size-error"  class="error hide">Please enter a party size between 2-8</span>
+                      <span id="party-size-error"  class="error hide">Please enter a party size of 2 or more</span>
                     </label>
                     <input type="tel" id="party-size">
 
                   </form>
                </div>
+
+              <div class="booking-policy">
+                <strong>Note:</strong>
+                <ul>
+                  <li>Please arrive 10-15 minutes before your scheduled time</li>
+                  <li>Cancellations made within 48 hours of your scheduled time will be subject to a $20 fee</li>
+                  <li>If anyone is younger than 16 an adult must remain on site at all times</li>
+                </ul>
+              </div>
+
+              <div class="cta hide">
+                <a class="button hollow hide" id="book" onclick="handleBook()"><span>Book Now</span></a>
+              </div>
             </div>
 
-            <div class="cta hide">
-              <a class="button hollow hide" id="book" onclick="handleBook()"><span>Book Now</span></a>
-            </div>
+
 
           </div>
 
@@ -345,6 +358,6 @@
 
     </script>
     <script defer type="text/javascript" src="js/moveTo.min.js"></script>
-    <script defer type="text/javascript" src="js/app_01_13_2018.js"></script>
+    <script defer type="text/javascript" src="js/app_01_20_2018.js"></script>
   </body>
 </html>
