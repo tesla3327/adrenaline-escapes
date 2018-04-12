@@ -1,35 +1,40 @@
-var fs = require('fs');
-const path = require('path');
+var fs = require("fs");
+const path = require("path");
 
-const authorize = require('./authorize');
-var google = require('googleapis');
+const authorize = require("./authorize");
+var google = require("googleapis");
 
 let sheets;
 
-const CLIENT_SECRET = {"installed":{"client_id":"203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com","project_id":"fifth-branch-158417","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"iHckTiZr-Nz1jsHXvctbjiEg","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}};
-const SPREADSHEET_ID = '1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk';
+const CLIENT_SECRET = {
+  installed: {
+    client_id:
+      "203978181474-i8fj4obh0cp9oq4vv49egobrduhjsli3.apps.googleusercontent.com",
+    project_id: "fifth-branch-158417",
+    auth_uri: "https://accounts.google.com/o/oauth2/auth",
+    token_uri: "https://accounts.google.com/o/oauth2/token",
+    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+    client_secret: "iHckTiZr-Nz1jsHXvctbjiEg",
+    redirect_uris: ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"]
+  }
+};
+const SPREADSHEET_ID = "1eC7iQlZSrtJb_4YSv9IoTB0FjOU4oAYLVMZ11yG3hKk";
 
 const MILLISECONDS_IN_DAY = 86400 * 1000;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-var TOKEN_DIR = './credentials/';
-const CLIENT_SECRET_PATH = 'client_secret.json';
-var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
+var SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
+var TOKEN_DIR = "./credentials/";
+const CLIENT_SECRET_PATH = "client_secret.json";
+var TOKEN_PATH = TOKEN_DIR + "sheets.googleapis.com-nodejs-quickstart.json";
 
 // Load client secrets from a local file.
-const authorizeWithGoogle = (clientSecretPath) => {
-  return new Promise( (resolve, reject) => {
+const authorizeWithGoogle = clientSecretPath => {
+  return new Promise((resolve, reject) => {
     // Authorize a client with the loaded credentials, then call the
     // Google Sheets API.
-    authorize(
-      CLIENT_SECRET,
-      SCOPES,
-      TOKEN_PATH,
-      TOKEN_DIR,
-      resolve
-    );
+    authorize(CLIENT_SECRET, SCOPES, TOKEN_PATH, TOKEN_DIR, resolve);
   });
 };
 
@@ -37,17 +42,17 @@ const authorizeWithGoogle = (clientSecretPath) => {
  * Get a Google Sheets object that has been authorized
  */
 const getSheetsObject = auth => {
-  sheets = google.sheets({ version: 'v4', auth });
-}
+  sheets = google.sheets({ version: "v4", auth });
+};
 
 /**
  * Wrap call to get values in a Promise
  */
 const getValuesFromSheet = params => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     sheets.spreadsheets.values.get(params, (err, response) => {
       if (err) {
-        console.log('Error fetching spreadsheet:', err);
+        console.log("Error fetching spreadsheet:", err);
         reject(err);
       }
 
@@ -60,10 +65,10 @@ const getValuesFromSheet = params => {
  * Wrap call to update values in a Promise
  */
 const updateValuesInSheet = (params, data) => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     sheets.spreadsheets.values.update(params, (err, response) => {
       if (err) {
-        console.log('Error updating spreadsheet:', err);
+        console.log("Error updating spreadsheet:", err);
         reject(err);
       }
 
@@ -79,13 +84,13 @@ const findIndexFromHeader = (key, headers) =>
  * Get the index for each column based on the headers
  */
 const getColumnIndex = headers => ({
-  dateString: findIndexFromHeader('date', headers),
-  time: findIndexFromHeader('time', headers),
-  room: findIndexFromHeader('room', headers),
-  name: findIndexFromHeader('name', headers),
-  email: findIndexFromHeader('email', headers),
-  phone: findIndexFromHeader('phone', headers),
-  partySize: findIndexFromHeader('party size', headers),
+  dateString: findIndexFromHeader("date", headers),
+  time: findIndexFromHeader("time", headers),
+  room: findIndexFromHeader("room", headers),
+  name: findIndexFromHeader("name", headers),
+  email: findIndexFromHeader("email", headers),
+  phone: findIndexFromHeader("phone", headers),
+  partySize: findIndexFromHeader("party size", headers)
 });
 
 /**
@@ -95,13 +100,10 @@ const getColumnIndex = headers => ({
  * Date, Time, Name, Email, Party Size
  */
 const getAllBookings = () => {
-  return getValuesFromSheet(
-    {
-      spreadsheetId: SPREADSHEET_ID,
-      range: 'Bookings',
-    }
-  )
-  .then( response => {
+  return getValuesFromSheet({
+    spreadsheetId: SPREADSHEET_ID,
+    range: "Bookings"
+  }).then(response => {
     const values = response.values;
 
     // Grab the headers
@@ -111,36 +113,39 @@ const getAllBookings = () => {
     const colIndex = getColumnIndex(headers);
 
     // Map each to an object
-    const bookings = values.map( (e, i) => {
-      const date = new Date(Date.parse(e[colIndex.dateString]));
+    const bookings = values
+      .map((e, i) => {
+        const date = new Date(Date.parse(e[colIndex.dateString]));
 
-      return {
-        date: date.valueOf() - (date.getTimezoneOffset() * 60 * 1000),
-        dateString: e[colIndex.dateString],
-        time: e[colIndex.time],
-        room: e[colIndex.room],
-        name: e[colIndex.name],
-        email: e[colIndex.email],
-        phone: e[colIndex.phone],
-        partySize: e[colIndex.partySize],
-      }
-    })
-    .filter( e => e.date !== undefined && e.time !== undefined )
-    // Add whether or not the time slot has been booked
-    .map( e => {
-      return Object.assign({}, e, { booked: !bookingIsAvailable(e) });
-    });
+        return {
+          date: date.valueOf() - date.getTimezoneOffset() * 60 * 1000,
+          dateString: e[colIndex.dateString],
+          time: e[colIndex.time],
+          room: e[colIndex.room],
+          name: e[colIndex.name],
+          email: e[colIndex.email],
+          phone: e[colIndex.phone],
+          partySize: e[colIndex.partySize]
+        };
+      })
+      .filter(e => e.date !== undefined && e.time !== undefined)
+      // Add whether or not the time slot has been booked
+      .map(e => {
+        return Object.assign({}, e, { booked: !bookingIsAvailable(e) });
+      });
 
     return { bookings, colIndex };
   });
 };
 
 const bookingIsAvailable = e => {
-  return  e.date !== undefined &&
-          e.time !== undefined &&
-          e.name === undefined &&
-          e.email === undefined &&
-          e.partySize === undefined;
+  return (
+    e.date !== undefined &&
+    e.time !== undefined &&
+    e.name === undefined &&
+    e.email === undefined &&
+    e.partySize === undefined
+  );
 };
 
 /**
@@ -152,7 +157,7 @@ const scrubPersonalData = e => {
     dateString: e.dateString,
     room: e.room,
     time: e.time,
-    booked: e.booked !== undefined ? e.booked : !bookingIsAvailable(e),
+    booked: e.booked !== undefined ? e.booked : !bookingIsAvailable(e)
   };
 };
 
@@ -160,13 +165,12 @@ const scrubPersonalData = e => {
  * Groups the bookings list by date
  */
 const groupByDate = bookings => {
-  const grouped = bookings.reduce( (prev, next) => {
-
+  const grouped = bookings.reduce((prev, next) => {
     if (!prev[next.date] || !prev[next.date].times) {
       prev[next.date] = {
         date: next.date,
         dateString: next.dateString,
-        times: [],
+        times: []
       };
     }
 
@@ -183,7 +187,7 @@ const groupByDate = bookings => {
  * Must be grouped by date first.
  */
 const groupConsecutive = bookings => {
-  const grouped = Object.keys(bookings).reduce( (prev, next) => {
+  const grouped = Object.keys(bookings).reduce((prev, next) => {
     // Get the last date range
     const lastRange = prev[prev.length - 1];
 
@@ -192,17 +196,20 @@ const groupConsecutive = bookings => {
     // console.log('next:', next - MILLISECONDS_IN_DAY);
     // console.log(lastRange && ((next - MILLISECONDS_IN_DAY) === lastRange.endDate));
 
-    if (lastRange && ((next - MILLISECONDS_IN_DAY) === parseInt(lastRange.endDate, 10))) {
+    if (
+      lastRange &&
+      next - MILLISECONDS_IN_DAY === parseInt(lastRange.endDate, 10)
+    ) {
       // Add to last range
       lastRange.endDate = parseInt(next, 10);
-      lastRange.dates.push( bookings[next] );
+      lastRange.dates.push(bookings[next]);
       // prev[prev.length - 1] = lastRange;
     } else {
       // Start new date range
       prev.push({
         startDate: parseInt(next, 10),
         endDate: parseInt(next, 10),
-        dates: [ bookings[next] ],
+        dates: [bookings[next]]
       });
     }
 
@@ -212,26 +219,51 @@ const groupConsecutive = bookings => {
   return grouped;
 };
 
+const filterByDate = bookings => {
+  // Remove any bookings that are in the past
+  const today = new Date(Date.now());
+
+  // Convert to epoch and adjust for timezone
+  // Timezone offset is in minutes
+  let todayEpoch = today.valueOf() - today.getTimezoneOffset() * 60 * 1000;
+
+  // Remove seconds and milliseconds, because we only have the year, month day
+  // in the date from the spreadsheet
+  todayEpoch = todayEpoch - todayEpoch % (1000 * 60 * 60 * 24);
+
+  // Go back one day to allow timezones behind UTC to have "today"
+  var yesterdayEpoch = todayEpoch - MILLISECONDS_IN_DAY;
+
+  return bookings.filter(e => e.date >= yesterdayEpoch);
+};
+
 /**
  * Filter bookings down to what is available
  */
 const getAvailableBookings = () =>
-  getAllBookings().then( ({ bookings }) => {
-    return bookings
-      .filter( e => bookingIsAvailable(e) );
+  getAllBookings().then(({ bookings }) => {
+    const futureDates = filterByDate(bookings);
+    return futureDates.filter(e => bookingIsAvailable(e));
   });
+
+const bookingHasValidDate = booking => {
+  const filtered = filterByDate([booking]);
+  return filtered.length > 0;
+};
 
 /**
  * Check to see if the requested spot is open, and then book it.
  */
 const makeBooking = booking => {
-  return getAllBookings().then( ({ bookings, colIndex }) => {
+  return getAllBookings().then(({ bookings, colIndex }) => {
     // Check where the spot is in the spreadsheet
-    const index = bookings.findIndex( e =>
-      e.date === booking.date &&
-      e.time === booking.time);
+    const index = bookings.findIndex(
+      e => e.date === booking.date && e.time === booking.time
+    );
 
-    if ( index >= 0 && bookingIsAvailable(bookings[index])  ) {
+    if (index >= 0 &&
+        bookingIsAvailable(bookings[index]) &&
+        bookingHasValidDate(bookings[index])) {
       // Construct our row
       // We have to put nulls where we don't want to update anything.
       // Use a magic number since we don't know what they'll do with the sheet.
@@ -242,19 +274,17 @@ const makeBooking = booking => {
       row[colIndex.partySize] = booking.partySize;
       row[colIndex.room] = booking.room;
 
-      return updateValuesInSheet(
-        {
-          valueInputOption: 'USER_ENTERED',
-          spreadsheetId: SPREADSHEET_ID,
-          range: `Bookings!A${ index + 2 }:AA${ index + 2 }`,
-          includeValuesInResponse: true,
-          resource: {
-            values: [row],
-          }
+      return updateValuesInSheet({
+        valueInputOption: "USER_ENTERED",
+        spreadsheetId: SPREADSHEET_ID,
+        range: `Bookings!A${index + 2}:AA${index + 2}`,
+        includeValuesInResponse: true,
+        resource: {
+          values: [row]
         }
-      );
+      });
     } else {
-      const err = new Error('Slot already filled');
+      const err = new Error("Slot already filled");
       err.errorCode = 404;
       throw err;
     }
@@ -263,8 +293,8 @@ const makeBooking = booking => {
 
 const initialize = () => {
   return authorizeWithGoogle(CLIENT_SECRET_PATH)
-    .then( getSheetsObject )
-    .then( () => console.log('Initialized Google Sheets API') );
+    .then(getSheetsObject)
+    .then(() => console.log("Initialized Google Sheets API"));
 };
 
 module.exports = {
@@ -274,6 +304,7 @@ module.exports = {
   makeBooking,
   scrubPersonalData,
   groupByDate,
+  filterByDate,
   groupConsecutive,
   MILLISECONDS_IN_DAY
 };
